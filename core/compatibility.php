@@ -13,11 +13,11 @@ if ( ! defined( 'ABSPATH' ) )
  *  @created  28/01/18
  */
 
-add_action( 'elementor/editor/after_enqueue_scripts', 'wpuxss_eml_elementor_scripts' );
+add_action( 'elementor/editor/after_enqueue_scripts', 'wpesq3_ml_elementor_scripts' );
 
-if ( ! function_exists( 'wpuxss_eml_elementor_scripts' ) ) {
+if ( ! function_exists( 'wpesq3_ml_elementor_scripts' ) ) {
 
-    function wpuxss_eml_elementor_scripts() {
+    function wpesq3_ml_elementor_scripts() {
 
         global $wpesq3_ml_dir;
 

@@ -5,22 +5,15 @@ if ( ! defined( 'ABSPATH' ) )
 
 
 
-add_filter( 'shortcode_atts_gallery', 'wpuxss_eml_shortcode_atts', 10, 3 );
-add_filter( 'shortcode_atts_playlist', 'wpuxss_eml_shortcode_atts', 10, 3 );
-add_filter( 'shortcode_atts_slideshow', 'wpuxss_eml_shortcode_atts', 10, 3 );
+add_filter( 'shortcode_atts_gallery', 'wpesq3_ml_shortcode_atts', 10, 3 );
+add_filter( 'shortcode_atts_playlist', 'wpesq3_ml_shortcode_atts', 10, 3 );
+add_filter( 'shortcode_atts_slideshow', 'wpesq3_ml_shortcode_atts', 10, 3 );
 
 
 
-/**
- *  wpuxss_eml_shortcode_atts
- *
- *  @since    2.1.6
- *  @created  19/01/16
- */
+if ( ! function_exists( 'wpesq3_ml_shortcode_atts' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_shortcode_atts' ) ) {
-
-    function wpuxss_eml_shortcode_atts( $output, $defaults, $atts ) {
+    function wpesq3_ml_shortcode_atts( $output, $defaults, $atts ) {
 
         $wpuxss_eml_lib_options = get_option( 'wpuxss_eml_lib_options', array() );
 
