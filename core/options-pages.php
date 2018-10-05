@@ -11,35 +11,30 @@ if ( ! function_exists( 'wpesq3_ml_register_setting' ) ) {
 
     function wpesq3_ml_register_setting() {
 
-        // plugin settings: media library
         register_setting(
             'media-library', //option_group
             'wpesq3_ml_lib_options', //option_name
             'wpesq3_ml_lib_options_validate' //sanitize_callback
         );
 
-        // plugin settings: taxonomies
         register_setting(
             'media-taxonomies', //option_group
             'wpesq3_ml_taxonomies', //option_name
             'wpesq3_ml_taxonomies_validate' //sanitize_callback
         );
 
-        // plugin settings: taxonomies options
         register_setting(
             'media-taxonomies', //option_group
             'wpesq3_ml_tax_options', //option_name
             'wpesq3_ml_tax_options_validate' //sanitize_callback
         );
 
-        // plugin settings: mime types
         register_setting(
             'mime-types', //option_group
             'wpesq3_ml_mimes', //option_name
             'wpesq3_ml_mimes_validate' //sanitize_callback
         );
 
-        // plugin settings: network settings
         // no validation callback here
         // called explicitly in wpesq3_ml_update_network_settings
         register_setting(
@@ -47,13 +42,11 @@ if ( ! function_exists( 'wpesq3_ml_register_setting' ) ) {
             'wpesq3_ml_network_options' //option_name
         );
 
-        // plugin settings: mime types backup
         register_setting(
             'wpesq3_ml_mimes_backup', //option_group
             'wpesq3_ml_mimes_backup' //option_name
         );
 
-        // plugin settings: all settings backup before import
         register_setting(
             'wpesq3_ml_backup', //option_group
             'wpesq3_ml_backup' //option_name
@@ -648,7 +641,7 @@ if ( ! function_exists( 'wpesq3_ml_options_page_scripts' ) ) {
 
         $l10n_data = array(
             'cleanup_warning_title' => __( 'Complete Cleanup', 'textdomain' ),
-            'cleanup_warning_text_p1' => '<p>' . __( 'You are about to <strong style="text-transform:uppercase">delete all plugin data</strong> from the database including backups.', 'textdomain' ) . '</p>',
+            'cleanup_warning_text_p1' => '<p>' . __( 'You are about to <strong style="text-transform:uppercase">delete all media library data</strong> from the database including backups.', 'textdomain' ) . '</p>',
             'cleanup_warning_text_p2' => '<p>' . __( 'This operation cannot be canceled! Are you still sure?', 'textdomain') . '</p>',
             'cleanup_warning_yes' => __( 'Yes, delete all data', 'textdomain' ),
             'in_progress_cleanup_text' => __( 'Cleaning...', 'textdomain' ),
@@ -750,7 +743,7 @@ if ( ! function_exists( 'wpesq3_ml_print_settings' ) ) {
                                 </ul>
 
                                 <p><?php _e( 'Media library settings will be imported from a configuration JSON file which can be obtained by exporting the settings on another website using the export button above.', 'textdomain' ); ?></p>
-                                <p><?php _e( 'All plugin settings will be overridden by the import. You will have a chance to restore current data from an automatic backup in case you are not satisfied with the result of the import.', 'textdomain' ); ?></p>
+                                <p><?php _e( 'All media library settings will be overridden by the import. You will have a chance to restore current data from an automatic backup in case you are not satisfied with the result of the import.', 'textdomain' ); ?></p>
 
                                 <form method="post" enctype="multipart/form-data">
                                     <p><input type="file" name="import_file"/></p>
