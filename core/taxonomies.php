@@ -98,7 +98,7 @@ if ( ! function_exists( 'wpuxss_eml_taxonomies_validate' ) ) {
         add_settings_error(
             'media-taxonomies',
             'eml_taxonomy_settings_saved',
-            __('Media Taxonomies settings saved.', 'enhanced-media-library'),
+            __('Media Taxonomies settings saved.', 'textdomain'),
             'updated'
         );
 
@@ -171,7 +171,7 @@ if ( ! function_exists( 'wpuxss_eml_lib_options_validate' ) ) {
         add_settings_error(
             'media-library',
             'eml_library_settings_saved',
-            __('Media Library settings saved.', 'enhanced-media-library'),
+            __('Media Library settings saved.', 'textdomain'),
             'updated'
         );
 
@@ -350,11 +350,11 @@ if ( ! function_exists( 'wpuxss_eml_restrict_manage_posts' ) ) {
 
         if ( current_user_can( 'manage_options' ) && in_array( 'authors', $wpuxss_eml_lib_options['filters_to_show'] ) ) {
 
-            echo "<label for='author' class='screen-reader-text'>" . __('Filter by author','enhanced-media-library') . "</label>";
+            echo "<label for='author' class='screen-reader-text'>" . __('Filter by author','textdomain') . "</label>";
 
             wp_dropdown_users(
                 array(
-                    'show_option_all'         => __( 'All Authors', 'enhanced-media-library' ),
+                    'show_option_all'         => __( 'All Authors', 'textdomain' ),
                     'name'                    => 'author',
                     'class'                   => 'attachment-filters',
                     'who'                     => 'authors',
@@ -371,15 +371,15 @@ if ( ! function_exists( 'wpuxss_eml_restrict_manage_posts' ) ) {
                 if ( ! (bool) $wpuxss_eml_taxonomies[$taxonomy->name]['admin_filter'] )
                     continue;
 
-                echo "<label for='" . esc_attr($taxonomy->name) ."' class='screen-reader-text'>" . __('Filter by','enhanced-media-library') . " " . esc_html($taxonomy->labels->singular_name) . "</label>";
+                echo "<label for='" . esc_attr($taxonomy->name) ."' class='screen-reader-text'>" . __('Filter by','textdomain') . " " . esc_html($taxonomy->labels->singular_name) . "</label>";
 
                 $selected = ( ! $uncategorized && isset( $wp_query->query[$taxonomy->name] ) ) ? $wp_query->query[$taxonomy->name] : 0;
 
                 wp_dropdown_categories(
                     array(
-                        'show_option_all'    =>  __( 'Filter by', 'enhanced-media-library' ) . ' ' . esc_html($taxonomy->labels->singular_name),
-                        'show_option_in'     =>  '— ' . __( 'All', 'enhanced-media-library' ) . ' ' . esc_html($taxonomy->labels->name) . ' —',
-                        'show_option_not_in' =>  '— ' . __( 'Not in a', 'enhanced-media-library' ) . ' ' . esc_html($taxonomy->labels->singular_name) . ' —',
+                        'show_option_all'    =>  __( 'Filter by', 'textdomain' ) . ' ' . esc_html($taxonomy->labels->singular_name),
+                        'show_option_in'     =>  '— ' . __( 'All', 'textdomain' ) . ' ' . esc_html($taxonomy->labels->name) . ' —',
+                        'show_option_not_in' =>  '— ' . __( 'Not in a', 'textdomain' ) . ' ' . esc_html($taxonomy->labels->singular_name) . ' —',
                         'taxonomy'           =>  $taxonomy->name,
                         'name'               =>  $taxonomy->name,
                         'orderby'            =>  'name',
@@ -718,7 +718,7 @@ if ( ! function_exists( 'wpuxss_eml_attachment_fields_to_edit' ) ) {
                     if ( $content )
                         $html = '<ul class="term-list">' . $content . '</ul>';
                     else
-                        $html = '<ul class="term-list"><li>No ' . esc_html($args['label']) . ' found. <a href="' . admin_url('/edit-tags.php?taxonomy='.$field.'&post_type=attachment') . '">' . __('Add some', 'enhanced-media-library') . '.</a></li></ul>';
+                        $html = '<ul class="term-list"><li>No ' . esc_html($args['label']) . ' found. <a href="' . admin_url('/edit-tags.php?taxonomy='.$field.'&post_type=attachment') . '">' . __('Add some', 'textdomain') . '.</a></li></ul>';
 
                 ob_end_clean();
 
@@ -1629,7 +1629,7 @@ if ( ! function_exists( 'wpuxss_eml_print_media_templates' ) ) {
                         <?php endif; ?>
                     <# } #>
 
-                    <a class="eml-toggle-collapse" href="javascript:;"><?php _e( 'More Details', 'enhanced-media-library' ); ?> &darr;</a>
+                    <a class="eml-toggle-collapse" href="javascript:;"><?php _e( 'More Details', 'textdomain' ); ?> &darr;</a>
 
                     <div class="compat-meta">
                         <# if ( data.compat && data.compat.meta ) { #>

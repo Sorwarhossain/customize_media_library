@@ -27,7 +27,7 @@ if ( ! function_exists( 'wpuxss_eml_mimes_validate' ) ) {
             add_settings_error(
                 'mime-types',
                 'eml_mime_types_restored',
-                __('MIME Types settings restored.', 'enhanced-media-library'),
+                __('MIME Types settings restored.', 'textdomain'),
                 'updated'
             );
         }
@@ -36,7 +36,7 @@ if ( ! function_exists( 'wpuxss_eml_mimes_validate' ) ) {
             add_settings_error(
                 'mime-types',
                 'eml_mime_types_saved',
-                __('MIME Types settings saved.', 'enhanced-media-library'),
+                __('MIME Types settings saved.', 'textdomain'),
                 'updated'
             );
         }

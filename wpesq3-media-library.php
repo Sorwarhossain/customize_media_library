@@ -268,8 +268,8 @@ if ( ! function_exists( 'wpesq3_ml_admin_enqueue_scripts' ) ) {
 
             $media_list_l10n = array(
                 '$_GET'             => wp_json_encode($_GET),
-                'uncategorized'     => __( 'All Uncategorized', 'enhanced-media-library' ),
-                'reset_all_filters' => __( 'Reset All Filters', 'enhanced-media-library' ),
+                'uncategorized'     => __( 'All Uncategorized', 'textdomain' ),
+                'reset_all_filters' => __( 'Reset All Filters', 'textdomain' ),
                 'filters_to_show'   => $wpuxss_eml_lib_options ? array_map( 'sanitize_key', $wpuxss_eml_lib_options['filters_to_show'] ) : array(
                     'types',
                     'dates',
@@ -300,8 +300,8 @@ if ( ! function_exists( 'wpesq3_ml_admin_enqueue_scripts' ) ) {
             $media_grid_l10n = array(
                 'grid_show_caption' => (int) $wpuxss_eml_lib_options['grid_show_caption'],
                 'grid_caption_type' => isset( $wpuxss_eml_lib_options['grid_caption_type'] ) ? sanitize_key( $wpuxss_eml_lib_options['grid_caption_type'] ) : 'title',
-                'more_details' => __( 'More Details', 'enhanced-media-library' ),
-                'less_details' => __( 'Less Details', 'enhanced-media-library' )
+                'more_details' => __( 'More Details', 'textdomain' ),
+                'less_details' => __( 'Less Details', 'textdomain' )
             );
 
             wp_localize_script(
@@ -469,20 +469,20 @@ if ( ! function_exists( 'wpesq3_ml_enqueue_media' ) ) {
             ),
             'users'                     => $users_ready_for_script,
             'wp_version'                => $wp_version,
-            'uncategorized'             => __( 'All Uncategorized', 'enhanced-media-library' ),
-            'filter_by'                 => __( 'Filter by', 'enhanced-media-library' ),
-            'in'                        => __( 'All', 'enhanced-media-library' ),
-            'not_in'                    => __( 'Not in a', 'enhanced-media-library' ),
-            'reset_filters'             => __( 'Reset All Filters', 'enhanced-media-library' ),
-            'author'                    => __( 'author', 'enhanced-media-library' ),
-            'authors'                   => __( 'authors', 'enhanced-media-library' ),
+            'uncategorized'             => __( 'All Uncategorized', 'textdomain' ),
+            'filter_by'                 => __( 'Filter by', 'textdomain' ),
+            'in'                        => __( 'All', 'textdomain' ),
+            'not_in'                    => __( 'Not in a', 'textdomain' ),
+            'reset_filters'             => __( 'Reset All Filters', 'textdomain' ),
+            'author'                    => __( 'author', 'textdomain' ),
+            'authors'                   => __( 'authors', 'textdomain' ),
             'current_screen'            => isset( $current_screen ) ? $current_screen->id : '',
 
-            'saveButton_success'        => __( 'Saved.', 'enhanced-media-library' ),
-            'saveButton_failure'        => __( 'Something went wrong.', 'enhanced-media-library' ),
-            'saveButton_text'           => __( 'Save Changes', 'enhanced-media-library' ),
+            'saveButton_success'        => __( 'Saved.', 'textdomain' ),
+            'saveButton_failure'        => __( 'Something went wrong.', 'textdomain' ),
+            'saveButton_text'           => __( 'Save Changes', 'textdomain' ),
 
-            'select_all'                => __( 'Select All', 'enhanced-media-library' )
+            'select_all'                => __( 'Select All', 'textdomain' )
         );
 
         wp_localize_script(
@@ -511,8 +511,8 @@ if ( ! function_exists( 'wpesq3_ml_enqueue_media' ) ) {
             );
 
             $enhanced_medialist_l10n = array(
-                'uploaded_to' => __( 'Uploaded to post #', 'enhanced-media-library' ),
-                'based_on' => __( 'Based On', 'enhanced-media-library' )
+                'uploaded_to' => __( 'Uploaded to post #', 'textdomain' ),
+                'based_on' => __( 'Based On', 'textdomain' )
             );
 
             wp_localize_script(
@@ -569,18 +569,18 @@ if ( ! function_exists( 'wpesq3_eml_set_options' ) ) {
                     'eml_media' => 1,
 
                     'labels' => array(
-                        'name' => __( 'Media Categories', 'enhanced-media-library' ),
-                        'singular_name' => __( 'Media Category', 'enhanced-media-library' ),
-                        'menu_name' => __( 'Media Categories', 'enhanced-media-library' ),
-                        'all_items' => __( 'All Media Categories', 'enhanced-media-library' ),
-                        'edit_item' => __( 'Edit Media Category', 'enhanced-media-library' ),
-                        'view_item' => __( 'View Media Category', 'enhanced-media-library' ),
-                        'update_item' => __( 'Update Media Category', 'enhanced-media-library' ),
-                        'add_new_item' => __( 'Add New Media Category', 'enhanced-media-library' ),
-                        'new_item_name' => __( 'New Media Category Name', 'enhanced-media-library' ),
-                        'parent_item' => __( 'Parent Media Category', 'enhanced-media-library' ),
-                        'parent_item_colon' => __( 'Parent Media Category:', 'enhanced-media-library' ),
-                        'search_items' => __( 'Search Media Categories', 'enhanced-media-library' )
+                        'name' => __( 'Media Categories', 'textdomain' ),
+                        'singular_name' => __( 'Media Category', 'textdomain' ),
+                        'menu_name' => __( 'Media Categories', 'textdomain' ),
+                        'all_items' => __( 'All Media Categories', 'textdomain' ),
+                        'edit_item' => __( 'Edit Media Category', 'textdomain' ),
+                        'view_item' => __( 'View Media Category', 'textdomain' ),
+                        'update_item' => __( 'Update Media Category', 'textdomain' ),
+                        'add_new_item' => __( 'Add New Media Category', 'textdomain' ),
+                        'new_item_name' => __( 'New Media Category Name', 'textdomain' ),
+                        'parent_item' => __( 'Parent Media Category', 'textdomain' ),
+                        'parent_item_colon' => __( 'Parent Media Category:', 'textdomain' ),
+                        'search_items' => __( 'Search Media Categories', 'textdomain' )
                     ),
 
                     'hierarchical' => 1,

@@ -81,11 +81,7 @@ if ( ! function_exists( 'wpesq3_ml_shortcode_atts' ) ) {
         if ( ! empty( $atts['type'] ) ) {
             $mime_type = $atts['type'];
         }
-        // @todo
-        // elseif ( ! empty( $output['type'] ) ) {
-        //     $mime_type = $output['type'];
-        //     unset( $output['type'] );
-        // }
+
         else {
             $mime_type = 'image';
         }
