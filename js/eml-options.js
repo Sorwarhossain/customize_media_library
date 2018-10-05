@@ -3,7 +3,7 @@ window.eml = window.eml || { l10n: {} };
 
 ( function( $ ) {
 
-    _.extend( eml.l10n, wpuxss_eml_options_l10n_data );
+    _.extend( eml.l10n, wpesq3_ml_options_l10n_data );
 
 
 

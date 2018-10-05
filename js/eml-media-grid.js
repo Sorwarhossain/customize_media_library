@@ -12,7 +12,7 @@ window.eml = window.eml || { l10n: {} };
 
 
 
-    _.extend( eml.l10n, wpuxss_eml_media_grid_l10n );
+    _.extend( eml.l10n, wpesq3_ml_media_grid_l10n );
 
 
 

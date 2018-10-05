@@ -4,25 +4,16 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 
+if ( ! function_exists( 'wpesq3_ml_mimes_validate' ) ) {
 
-/**
- *  wpuxss_eml_mimes_validate
- *
- *  @type     callback function
- *  @since    1.0
- *  @created  15/10/13
- */
-
-if ( ! function_exists( 'wpuxss_eml_mimes_validate' ) ) {
-
-    function wpuxss_eml_mimes_validate( $input ) {
+    function wpesq3_ml_mimes_validate( $input ) {
 
         if ( ! $input ) $input = array();
 
 
         if ( isset( $_POST['eml-restore-mime-types-settings'] ) ) {
 
-            $input = get_site_option( 'wpuxss_eml_mimes_backup', array() );
+            $input = get_site_option( 'wpesq3_ml_mimes_backup', array() );
 
             add_settings_error(
                 'mime-types',
@@ -44,7 +35,7 @@ if ( ! function_exists( 'wpuxss_eml_mimes_validate' ) ) {
 
         foreach ( $input as $type => $mime ) {
 
-            $sanitized_type = wpuxss_eml_sanitize_extension( $type );
+            $sanitized_type = wpesq3_ml_sanitize_extension( $type );
 
             if ( $sanitized_type !== $type ) {
 
@@ -67,18 +58,10 @@ if ( ! function_exists( 'wpuxss_eml_mimes_validate' ) ) {
 
 
 
-/**
- *  wpuxss_eml_sanitize_extension
- *
- *  Based on the original sanitize_key
- *
- *  @since    1.0
- *  @created  24/10/13
- */
 
-if ( ! function_exists( 'wpuxss_eml_sanitize_extension' ) ) {
+if ( ! function_exists( 'wpesq3_ml_sanitize_extension' ) ) {
 
-    function wpuxss_eml_sanitize_extension( $key ) {
+    function wpesq3_ml_sanitize_extension( $key ) {
 
         $key = strtolower( $key );
         $key = preg_replace( '/[^a-z0-9|]/', '', $key );
@@ -88,24 +71,17 @@ if ( ! function_exists( 'wpuxss_eml_sanitize_extension' ) ) {
 
 
 
-/**
- *  wpuxss_eml_post_mime_types
- *
- *  @since    1.0
- *  @created  03/08/13
- */
+add_filter( 'post_mime_types', 'wpesq3_ml_post_mime_types' );
 
-add_filter( 'post_mime_types', 'wpuxss_eml_post_mime_types' );
+if ( ! function_exists( 'wpesq3_ml_post_mime_types' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_post_mime_types' ) ) {
+    function wpesq3_ml_post_mime_types( $post_mime_types ) {
 
-    function wpuxss_eml_post_mime_types( $post_mime_types ) {
+        $wpesq3_ml_mimes = get_option('wpesq3_ml_mimes');
 
-        $wpuxss_eml_mimes = get_option('wpuxss_eml_mimes');
+        if ( ! empty( $wpesq3_ml_mimes ) ) {
 
-        if ( ! empty( $wpuxss_eml_mimes ) ) {
-
-            foreach ( $wpuxss_eml_mimes as $extension => $mime ) {
+            foreach ( $wpesq3_ml_mimes as $extension => $mime ) {
 
                 if ( (bool) $mime['filter'] ) {
 
@@ -126,28 +102,19 @@ if ( ! function_exists( 'wpuxss_eml_post_mime_types' ) ) {
 
 
 
-/**
- *  wpuxss_eml_upload_mimes
- *
- *  Allowed mime types
- *
- *  @since    1.0
- *  @created  03/08/13
- */
+add_filter('upload_mimes', 'wpesq3_ml_upload_mimes');
 
-add_filter('upload_mimes', 'wpuxss_eml_upload_mimes');
+if ( ! function_exists( 'wpesq3_ml_upload_mimes' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_upload_mimes' ) ) {
+    function wpesq3_ml_upload_mimes( $existing_mimes = array() ) {
 
-    function wpuxss_eml_upload_mimes( $existing_mimes = array() ) {
+        $wpesq3_ml_mimes = get_option('wpesq3_ml_mimes');
 
-        $wpuxss_eml_mimes = get_option('wpuxss_eml_mimes');
+        if ( ! empty( $wpesq3_ml_mimes ) ) {
 
-        if ( ! empty( $wpuxss_eml_mimes ) ) {
+            foreach ( $wpesq3_ml_mimes as $extension => $mime ) {
 
-            foreach ( $wpuxss_eml_mimes as $extension => $mime ) {
-
-                $extension = wpuxss_eml_sanitize_extension( $extension );
+                $extension = wpesq3_ml_sanitize_extension( $extension );
 
 
                 if ( (bool) $mime['upload'] ) {
@@ -165,29 +132,20 @@ if ( ! function_exists( 'wpuxss_eml_upload_mimes' ) ) {
 
 
 
-/**
- *  wpuxss_eml_mime_types
- *
- *  All mime Types
- *
- *  @since    1.0
- *  @created  03/08/13
- */
+add_filter( 'mime_types', 'wpesq3_ml_mime_types' );
 
-add_filter( 'mime_types', 'wpuxss_eml_mime_types' );
+if ( ! function_exists( 'wpesq3_ml_mime_types' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_mime_types' ) ) {
-
-    function wpuxss_eml_mime_types( $default_mimes ) {
+    function wpesq3_ml_mime_types( $default_mimes ) {
 
         $new_mimes = array();
-        $wpuxss_eml_mimes = get_option( 'wpuxss_eml_mimes' );
+        $wpesq3_ml_mimes = get_option( 'wpesq3_ml_mimes' );
 
-        if ( false !== $wpuxss_eml_mimes ) {
+        if ( false !== $wpesq3_ml_mimes ) {
 
-            foreach ( $wpuxss_eml_mimes as $extension => $mime ) {
+            foreach ( $wpesq3_ml_mimes as $extension => $mime ) {
 
-                $extension = wpuxss_eml_sanitize_extension( $extension );
+                $extension = wpesq3_ml_sanitize_extension( $extension );
                 $new_mimes[$extension] = sanitize_mime_type( $mime['mime'] );
             }
 

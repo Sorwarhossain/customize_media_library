@@ -4,18 +4,9 @@ if ( ! defined( 'ABSPATH' ) )
     exit;
 
 
+if ( ! function_exists( 'wpesq3_ml_taxonomies_validate' ) ) {
 
-/**
- *  wpuxss_eml_taxonomies_validate
- *
- *  @type     callback function
- *  @since    1.0
- *  @created  28/09/13
- */
-
-if ( ! function_exists( 'wpuxss_eml_taxonomies_validate' ) ) {
-
-    function wpuxss_eml_taxonomies_validate( $input ) {
+    function wpesq3_ml_taxonomies_validate( $input ) {
 
         if ( ! $input ) $input = array();
 
@@ -57,7 +48,7 @@ if ( ! function_exists( 'wpuxss_eml_taxonomies_validate' ) ) {
                 $input[$taxonomy]['show_admin_column'] = isset($params['show_admin_column']) && !! $params['show_admin_column'] ? 1 : 0;
                 $input[$taxonomy]['show_in_nav_menus'] = isset($params['show_in_nav_menus']) && !! $params['show_in_nav_menus'] ? 1 : 0;
                 $input[$taxonomy]['rewrite']['with_front'] = isset($params['rewrite']['with_front']) && !! $params['rewrite']['with_front'] ? 1 : 0;
-                $input[$taxonomy]['rewrite']['slug'] = isset($params['rewrite']['slug']) ? wpuxss_eml_sanitize_slug( $params['rewrite']['slug'], $taxonomy ) : '';
+                $input[$taxonomy]['rewrite']['slug'] = isset($params['rewrite']['slug']) ? wpesq3_ml_sanitize_slug( $params['rewrite']['slug'], $taxonomy ) : '';
             }
 
             if ( ! $input[$taxonomy]['eml_media'] ) {
@@ -108,16 +99,9 @@ if ( ! function_exists( 'wpuxss_eml_taxonomies_validate' ) ) {
 
 
 
-/**
- *  wpuxss_eml_sanitize_slug
- *
- *  @since    2.0.4
- *  @created  07/02/15
- */
+if ( ! function_exists( 'wpesq3_ml_sanitize_slug' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_sanitize_slug' ) ) {
-
-    function wpuxss_eml_sanitize_slug( $slug, $fallback_slug = '' ) {
+    function wpesq3_ml_sanitize_slug( $slug, $fallback_slug = '' ) {
 
         $slug_array = explode ( '/', $slug );
         $slug_array = array_filter( $slug_array );
@@ -134,16 +118,9 @@ if ( ! function_exists( 'wpuxss_eml_sanitize_slug' ) ) {
 }
 
 
+if ( ! function_exists( 'wpesq3_ml_lib_options_validate' ) ) {
 
-/**
- *  wpuxss_eml_lib_options_validate
- *
- *  @since    2.2.1
- */
-
-if ( ! function_exists( 'wpuxss_eml_lib_options_validate' ) ) {
-
-    function wpuxss_eml_lib_options_validate( $input ) {
+    function wpesq3_ml_lib_options_validate( $input ) {
 
         foreach ( (array)$input as $key => $option ) {
 
@@ -181,17 +158,10 @@ if ( ! function_exists( 'wpuxss_eml_lib_options_validate' ) ) {
 
 
 
-/**
- *  wpuxss_eml_tax_options_validate
- *
- *  @type     callback function
- *  @since    2.0.4
- *  @created  28/01/15
- */
 
-if ( ! function_exists( 'wpuxss_eml_tax_options_validate' ) ) {
+if ( ! function_exists( 'wpesq3_ml_tax_options_validate' ) ) {
 
-    function wpuxss_eml_tax_options_validate( $input ) {
+    function wpesq3_ml_tax_options_validate( $input ) {
 
         foreach ( (array)$input as $key => $option ) {
             $input[$key] = isset( $option ) && !! $option ? 1 : 0;
@@ -202,22 +172,14 @@ if ( ! function_exists( 'wpuxss_eml_tax_options_validate' ) ) {
 }
 
 
+add_filter( 'ajax_query_attachments_args', 'wpesq3_ml_ajax_query_attachments_args' );
 
-/**
- *  wpuxss_eml_ajax_query_attachments_args
- *
- *  @since    2.3.2
- *  @created  24/09/16
- */
+if ( ! function_exists( 'wpesq3_ml_ajax_query_attachments_args' ) ) {
 
-add_filter( 'ajax_query_attachments_args', 'wpuxss_eml_ajax_query_attachments_args' );
+    function wpesq3_ml_ajax_query_attachments_args( $query ) {
 
-if ( ! function_exists( 'wpuxss_eml_ajax_query_attachments_args' ) ) {
-
-    function wpuxss_eml_ajax_query_attachments_args( $query ) {
-
-        $wpuxss_eml_taxonomies = get_option( 'wpuxss_eml_taxonomies', array() );
-        $wpuxss_eml_lib_options = get_option( 'wpuxss_eml_lib_options' );
+        $wpesq3_ml_taxonomies = get_option( 'wpesq3_ml_taxonomies', array() );
+        $wpesq3_ml_lib_options = get_option( 'wpesq3_ml_lib_options' );
         $tax_query = array();
         $eml_query = isset( $_REQUEST['query'] ) ? (array) $_REQUEST['query'] : array();
         $processed_taxonomies = get_object_taxonomies( 'attachment', 'object' );
@@ -241,7 +203,7 @@ if ( ! function_exists( 'wpuxss_eml_ajax_query_attachments_args' ) ) {
 
         foreach ( $processed_taxonomies as $taxonomy_name => $params ) {
 
-            if ( ! array_key_exists( $taxonomy_name, $wpuxss_eml_taxonomies ) ) {
+            if ( ! array_key_exists( $taxonomy_name, $wpesq3_ml_taxonomies ) ) {
                 continue;
             }
 
@@ -273,7 +235,7 @@ if ( ! function_exists( 'wpuxss_eml_ajax_query_attachments_args' ) ) {
                             'taxonomy' => $taxonomy_name,
                             'field' => $field,
                             'terms' => (array) $query[$taxonomy_name],
-                            'include_children' => (bool) $wpuxss_eml_lib_options['include_children']
+                            'include_children' => (bool) $wpesq3_ml_lib_options['include_children']
                         );
                     }
                     elseif ( 'not_in' === $query[$taxonomy_name] ) {
@@ -316,20 +278,12 @@ if ( ! function_exists( 'wpuxss_eml_ajax_query_attachments_args' ) ) {
 
 
 
-/**
- *  wpuxss_eml_restrict_manage_posts
- *
- *  Adds taxonomy filters to Media Library List View
- *
- *  @since    1.0
- *  @created  11/08/13
- */
 
-add_action( 'restrict_manage_posts', 'wpuxss_eml_restrict_manage_posts', 10, 2 );
+add_action( 'restrict_manage_posts', 'wpesq3_ml_restrict_manage_posts', 10, 2 );
 
-if ( ! function_exists( 'wpuxss_eml_restrict_manage_posts' ) ) {
+if ( ! function_exists( 'wpesq3_ml_restrict_manage_posts' ) ) {
 
-    function wpuxss_eml_restrict_manage_posts( $post_type, $which ) {
+    function wpesq3_ml_restrict_manage_posts( $post_type, $which ) {
 
         global $current_screen,
                $wp_query;
@@ -342,13 +296,13 @@ if ( ! function_exists( 'wpuxss_eml_restrict_manage_posts' ) ) {
             return;
         }
 
-        $wpuxss_eml_lib_options = get_option( 'wpuxss_eml_lib_options' );
-        $wpuxss_eml_taxonomies = get_option( 'wpuxss_eml_taxonomies', array() );
+        $wpesq3_ml_lib_options = get_option( 'wpesq3_ml_lib_options' );
+        $wpesq3_ml_taxonomies = get_option( 'wpesq3_ml_taxonomies', array() );
 
         $uncategorized = ( isset( $_REQUEST['attachment-filter'] ) && 'uncategorized' === $_REQUEST['attachment-filter'] ) ? 1 : 0;
 
 
-        if ( current_user_can( 'manage_options' ) && in_array( 'authors', $wpuxss_eml_lib_options['filters_to_show'] ) ) {
+        if ( current_user_can( 'manage_options' ) && in_array( 'authors', $wpesq3_ml_lib_options['filters_to_show'] ) ) {
 
             echo "<label for='author' class='screen-reader-text'>" . __('Filter by author','textdomain') . "</label>";
 
@@ -364,11 +318,11 @@ if ( ! function_exists( 'wpuxss_eml_restrict_manage_posts' ) ) {
         }
 
 
-        if ( in_array( 'taxonomies', $wpuxss_eml_lib_options['filters_to_show'] ) ) {
+        if ( in_array( 'taxonomies', $wpesq3_ml_lib_options['filters_to_show'] ) ) {
 
             foreach ( get_object_taxonomies( 'attachment', 'object' ) as $taxonomy ) {
 
-                if ( ! (bool) $wpuxss_eml_taxonomies[$taxonomy->name]['admin_filter'] )
+                if ( ! (bool) $wpesq3_ml_taxonomies[$taxonomy->name]['admin_filter'] )
                     continue;
 
                 echo "<label for='" . esc_attr($taxonomy->name) ."' class='screen-reader-text'>" . __('Filter by','textdomain') . " " . esc_html($taxonomy->labels->singular_name) . "</label>";
@@ -385,11 +339,11 @@ if ( ! function_exists( 'wpuxss_eml_restrict_manage_posts' ) ) {
                         'orderby'            =>  'name',
                         'selected'           =>  $selected,
                         'hierarchical'       =>  true,
-                        'show_count'         =>  (bool) $wpuxss_eml_lib_options['show_count'],
+                        'show_count'         =>  (bool) $wpesq3_ml_lib_options['show_count'],
                         'hide_empty'         =>  false,
                         'hide_if_empty'      =>  true,
                         'class'              =>  'attachment-filters eml-taxonomy-filters',
-                        'walker'             =>  new wpuxss_eml_Walker_CategoryDropdown()
+                        'walker'             =>  new wpesq3_ml_Walker_CategoryDropdown()
                     )
                 );
             } // endforeach
@@ -399,23 +353,17 @@ if ( ! function_exists( 'wpuxss_eml_restrict_manage_posts' ) ) {
 
 
 
-/**
- *  wpuxss_eml_disable_months_dropdown
- *
- *  @since    2.6
- *  @created  07/03/18
- */
 
-add_action( 'load-upload.php', 'wpuxss_eml_disable_months_dropdown' );
+add_action( 'load-upload.php', 'wpesq3_ml_disable_months_dropdown' );
 
-if ( ! function_exists( 'wpuxss_eml_disable_months_dropdown' ) ) {
+if ( ! function_exists( 'wpesq3_ml_disable_months_dropdown' ) ) {
 
-    function wpuxss_eml_disable_months_dropdown() {
+    function wpesq3_ml_disable_months_dropdown() {
 
-        $wpuxss_eml_lib_options = get_option( 'wpuxss_eml_lib_options' );
+        $wpesq3_ml_lib_options = get_option( 'wpesq3_ml_lib_options' );
 
-        if( isset( $wpuxss_eml_lib_options['filters_to_show'] ) &&
-            ! in_array( 'dates', $wpuxss_eml_lib_options['filters_to_show'] ) ) {
+        if( isset( $wpesq3_ml_lib_options['filters_to_show'] ) &&
+            ! in_array( 'dates', $wpesq3_ml_lib_options['filters_to_show'] ) ) {
             add_filter( 'disable_months_dropdown', '__return_true' );
         }
     }
@@ -425,20 +373,11 @@ if ( ! function_exists( 'wpuxss_eml_disable_months_dropdown' ) ) {
 
 
 
-/**
- *  wpuxss_eml_dropdown_cats
- *
- *  Modifies taxonomy filters in Media Library List View
- *
- *  @since    2.0.4.5
- *  @created  19/04/15
- */
+add_filter( 'wp_dropdown_cats', 'wpesq3_ml_dropdown_cats', 10, 2 );
 
-add_filter( 'wp_dropdown_cats', 'wpuxss_eml_dropdown_cats', 10, 2 );
+if ( ! function_exists( 'wpesq3_ml_dropdown_cats' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_dropdown_cats' ) ) {
-
-    function wpuxss_eml_dropdown_cats( $output, $r ) {
+    function wpesq3_ml_dropdown_cats( $output, $r ) {
 
         global $current_screen;
 
@@ -495,35 +434,29 @@ if ( ! function_exists( 'wpuxss_eml_dropdown_cats' ) ) {
 
 
 
-/**
- *  wpuxss_eml_parse_tax_query
- *
- *  @since    2.6.4
- *  @created  23/05/18
- */
 
-add_action( 'parse_tax_query', 'wpuxss_eml_parse_tax_query' );
+add_action( 'parse_tax_query', 'wpesq3_ml_parse_tax_query' );
 
-if ( ! function_exists( 'wpuxss_eml_parse_tax_query' ) ) {
+if ( ! function_exists( 'wpesq3_ml_parse_tax_query' ) ) {
 
-    function wpuxss_eml_parse_tax_query( $query ) {
+    function wpesq3_ml_parse_tax_query( $query ) {
 
         if ( ! $query->is_main_query() ) {
             return;
         }
 
 
-        $wpuxss_eml_tax_options = get_option( 'wpuxss_eml_tax_options', array() );
+        $wpesq3_ml_tax_options = get_option( 'wpesq3_ml_tax_options', array() );
 
-        if ( (bool) $wpuxss_eml_tax_options['tax_archives'] ) {
+        if ( (bool) $wpesq3_ml_tax_options['tax_archives'] ) {
 
-            $wpuxss_eml_lib_options = get_option( 'wpuxss_eml_lib_options', array() );
+            $wpesq3_ml_lib_options = get_option( 'wpesq3_ml_lib_options', array() );
 
-            foreach ( get_option('wpuxss_eml_taxonomies', array() ) as $taxonomy => $params ) {
+            foreach ( get_option('wpesq3_ml_taxonomies', array() ) as $taxonomy => $params ) {
 
                 if ( (bool) $params['assigned'] && (bool) $params['eml_media'] && is_tax( $taxonomy ) ) {
 
-                    $query->tax_query->queries[0]['include_children'] = (bool) $wpuxss_eml_lib_options['include_children'];
+                    $query->tax_query->queries[0]['include_children'] = (bool) $wpesq3_ml_lib_options['include_children'];
                 }
             }
         }
@@ -532,18 +465,12 @@ if ( ! function_exists( 'wpuxss_eml_parse_tax_query' ) ) {
 
 
 
-/**
- *  wpuxss_eml_backend_parse_tax_query
- *
- *  @since    2.6.4
- *  @created  23/05/18
- */
 
-add_action( 'parse_tax_query', 'wpuxss_eml_backend_parse_tax_query' );
+add_action( 'parse_tax_query', 'wpesq3_ml_backend_parse_tax_query' );
 
-if ( ! function_exists( 'wpuxss_eml_backend_parse_tax_query' ) ) {
+if ( ! function_exists( 'wpesq3_ml_backend_parse_tax_query' ) ) {
 
-    function wpuxss_eml_backend_parse_tax_query( $query ) {
+    function wpesq3_ml_backend_parse_tax_query( $query ) {
 
         global $current_screen;
 
@@ -570,7 +497,7 @@ if ( ! function_exists( 'wpuxss_eml_backend_parse_tax_query' ) ) {
 
 
         $uncategorized = ( isset( $_REQUEST['attachment-filter'] ) && 'uncategorized' === $_REQUEST['attachment-filter'] ) ? 1 : 0;
-        $wpuxss_eml_lib_options = get_option( 'wpuxss_eml_lib_options' );
+        $wpesq3_ml_lib_options = get_option( 'wpesq3_ml_lib_options' );
 
 
         if ( isset( $_REQUEST['category'] ) )
@@ -610,7 +537,7 @@ if ( ! function_exists( 'wpuxss_eml_backend_parse_tax_query' ) ) {
                         'taxonomy' => $taxonomy,
                         'field' => 'term_id',
                         'terms' => array( $term->term_id ),
-                        'include_children' => (bool) $wpuxss_eml_lib_options['include_children']
+                        'include_children' => (bool) $wpesq3_ml_lib_options['include_children']
                     );
 
                     $query->query_vars[$taxonomy] = $term->term_id;
@@ -641,7 +568,7 @@ if ( ! function_exists( 'wpuxss_eml_backend_parse_tax_query' ) ) {
                             'taxonomy' => $taxonomy,
                             'field' => 'term_id',
                             'terms' => array( $query->query[$taxonomy] ),
-                            'include_children' => (bool) $wpuxss_eml_lib_options['include_children']
+                            'include_children' => (bool) $wpesq3_ml_lib_options['include_children']
                         );
                     }
                     elseif ( 'not_in' === $query->query[$taxonomy] ) {
@@ -678,27 +605,18 @@ if ( ! function_exists( 'wpuxss_eml_backend_parse_tax_query' ) ) {
 
 
 
-/**
- *  wpuxss_eml_attachment_fields_to_edit
- *
- *  Based on /wp-admin/includes/media.php
- *
- *  @since    1.0
- *  @created  14/08/13
- */
+add_filter( 'attachment_fields_to_edit', 'wpesq3_ml_attachment_fields_to_edit', 10, 2 );
 
-add_filter( 'attachment_fields_to_edit', 'wpuxss_eml_attachment_fields_to_edit', 10, 2 );
+if ( ! function_exists( 'wpesq3_ml_attachment_fields_to_edit' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_attachment_fields_to_edit' ) ) {
-
-    function wpuxss_eml_attachment_fields_to_edit( $form_fields, $post ) {
+    function wpesq3_ml_attachment_fields_to_edit( $form_fields, $post ) {
 
         if ( ! function_exists( 'wp_terms_checklist' ) ) {
             return $form_fields;
         }
 
 
-        $wpuxss_eml_tax_options = get_option('wpuxss_eml_tax_options');
+        $wpesq3_ml_tax_options = get_option('wpesq3_ml_tax_options');
 
 
         foreach( $form_fields as $field => $args ) {
@@ -707,7 +625,7 @@ if ( ! function_exists( 'wpuxss_eml_attachment_fields_to_edit' ) ) {
                 continue;
             }
 
-            if ( (bool) $wpuxss_eml_tax_options['edit_all_as_hierarchical'] || (bool) $args['hierarchical'] ) {
+            if ( (bool) $wpesq3_ml_tax_options['edit_all_as_hierarchical'] || (bool) $args['hierarchical'] ) {
 
                 ob_start();
 
@@ -752,22 +670,14 @@ if ( ! function_exists( 'wpuxss_eml_attachment_fields_to_edit' ) ) {
 
 
 
-/**
- *  wpuxss_eml_Walker_CategoryDropdown
- *
- *  Based on /wp-includes/class-walker-category-dropdown.php
- *
- *  @since    2.3
- *  @created  14/06/16
- */
 
-if ( ! class_exists( 'wpuxss_eml_Walker_CategoryDropdown' ) ) {
+if ( ! class_exists( 'wpesq3_ml_Walker_CategoryDropdown' ) ) {
 
-    class wpuxss_eml_Walker_CategoryDropdown extends Walker_CategoryDropdown {
+    class wpesq3_ml_Walker_CategoryDropdown extends Walker_CategoryDropdown {
 
         function start_el( &$output, $category, $depth = 0, $args = array(), $id = 0 ) {
 
-            $wpuxss_eml_lib_options = get_option( 'wpuxss_eml_lib_options' );
+            $wpesq3_ml_lib_options = get_option( 'wpesq3_ml_lib_options' );
 
             $pad = str_repeat('&nbsp;', $depth * 3);
 
@@ -789,9 +699,9 @@ if ( ! class_exists( 'wpuxss_eml_Walker_CategoryDropdown' ) ) {
             $output .= $pad.$cat_name;
 
 
-            if ( $args['show_count'] && (bool) $wpuxss_eml_lib_options['show_count'] ) {
+            if ( $args['show_count'] && (bool) $wpesq3_ml_lib_options['show_count'] ) {
 
-                $count = wpuxss_eml_get_media_term_count( $category->term_id, $category->term_taxonomy_id );
+                $count = wpesq3_ml_get_media_term_count( $category->term_id, $category->term_taxonomy_id );
                 $output .= '&nbsp;&nbsp;('. number_format_i18n( $count ) .')';
             }
 
@@ -802,26 +712,19 @@ if ( ! class_exists( 'wpuxss_eml_Walker_CategoryDropdown' ) ) {
 
 
 
-/**
- *  wpuxss_eml_get_media_term_count
- *
- *  @since    2.3
- *  @created  14/06/16
- */
+if ( ! function_exists( 'wpesq3_ml_get_media_term_count' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_get_media_term_count' ) ) {
-
-    function wpuxss_eml_get_media_term_count( $term_id, $tt_id ) {
+    function wpesq3_ml_get_media_term_count( $term_id, $tt_id ) {
 
         global $wpdb;
 
 
         $terms = array( $tt_id );
         $children = array();
-        $wpuxss_eml_lib_options = get_option( 'wpuxss_eml_lib_options' );
+        $wpesq3_ml_lib_options = get_option( 'wpesq3_ml_lib_options' );
 
 
-        if ( (bool) $wpuxss_eml_lib_options['include_children'] ) {
+        if ( (bool) $wpesq3_ml_lib_options['include_children'] ) {
             $children = $wpdb->get_results( $wpdb->prepare( "SELECT term_taxonomy_id FROM $wpdb->term_taxonomy WHERE parent = %d", (int) $term_id ) );
         }
 
@@ -929,10 +832,10 @@ if ( ! class_exists( 'Walker_Media_Taxonomy_Uploader_Filter' ) ) {
 
             extract($args);
 
-            $wpuxss_eml_lib_options = get_option( 'wpuxss_eml_lib_options' );
+            $wpesq3_ml_lib_options = get_option( 'wpesq3_ml_lib_options' );
             $indent = str_repeat('&nbsp;&nbsp;&nbsp;', $depth);
 
-            $count = ( (bool) $wpuxss_eml_lib_options['show_count'] ) ? '&nbsp;&nbsp;('. number_format_i18n( wpuxss_eml_get_media_term_count( $category->term_id, $category->term_taxonomy_id ) ) .')' : '';
+            $count = ( (bool) $wpesq3_ml_lib_options['show_count'] ) ? '&nbsp;&nbsp;('. number_format_i18n( wpesq3_ml_get_media_term_count( $category->term_id, $category->term_taxonomy_id ) ) .')' : '';
 
             $el = array(
                 'term_id' => intval( $category->term_id ),
@@ -953,20 +856,12 @@ if ( ! class_exists( 'Walker_Media_Taxonomy_Uploader_Filter' ) ) {
 
 
 
-/**
- *  wpuxss_eml_save_attachment_compat
- *
- *  Based on /wp-admin/includes/ajax-actions.php
- *
- *  @since    1.0.6
- *  @created  06/14/14
- */
 
-add_action( 'wp_ajax_save-attachment-compat', 'wpuxss_eml_save_attachment_compat', 0 );
+add_action( 'wp_ajax_save-attachment-compat', 'wpesq3_ml_save_attachment_compat', 0 );
 
-if ( ! function_exists( 'wpuxss_eml_save_attachment_compat' ) ) {
+if ( ! function_exists( 'wpesq3_ml_save_attachment_compat' ) ) {
 
-    function wpuxss_eml_save_attachment_compat() {
+    function wpesq3_ml_save_attachment_compat() {
 
         if ( ! isset( $_REQUEST['id'] ) )
             wp_send_json_error();
@@ -978,7 +873,7 @@ if ( ! function_exists( 'wpuxss_eml_save_attachment_compat' ) ) {
             wp_send_json_error();
 
 
-        $wpuxss_eml_lib_options = get_option( 'wpuxss_eml_lib_options' );
+        $wpesq3_ml_lib_options = get_option( 'wpesq3_ml_lib_options' );
         $attachment_data = $_REQUEST['attachments'][ $id ];
 
         check_ajax_referer( 'update-post_' . $id, 'nonce' );
@@ -1005,10 +900,10 @@ if ( ! function_exists( 'wpuxss_eml_save_attachment_compat' ) ) {
 
         $media_taxonomy_names = get_object_taxonomies( 'attachment','names' );
 
-        if ( (bool) $wpuxss_eml_lib_options['show_count'] ) {
+        if ( (bool) $wpesq3_ml_lib_options['show_count'] ) {
 
             $terms = get_terms( $media_taxonomy_names, array('fields'=>'all','get'=>'all') );
-            $term_pairs = wpuxss_eml_get_media_term_pairs( $terms, 'id=>tt_id' );
+            $term_pairs = wpesq3_ml_get_media_term_pairs( $terms, 'id=>tt_id' );
         }
 
 
@@ -1031,10 +926,10 @@ if ( ! function_exists( 'wpuxss_eml_save_attachment_compat' ) ) {
 
             wp_set_object_terms( $id, $term_ids, $taxonomy, false );
 
-            if ( (bool) $wpuxss_eml_lib_options['show_count'] ) {
+            if ( (bool) $wpesq3_ml_lib_options['show_count'] ) {
 
                 foreach( $term_pairs as $term_id => $tt_id) {
-                    $tcount[$term_id] = wpuxss_eml_get_media_term_count( $term_id, $tt_id );
+                    $tcount[$term_id] = wpesq3_ml_get_media_term_count( $term_id, $tt_id );
                 }
             }
         }
@@ -1042,7 +937,7 @@ if ( ! function_exists( 'wpuxss_eml_save_attachment_compat' ) ) {
         if ( ! $attachment = wp_prepare_attachment_for_js( $id ) )
             wp_send_json_error();
 
-        if ( (bool) $wpuxss_eml_lib_options['show_count'] )
+        if ( (bool) $wpesq3_ml_lib_options['show_count'] )
             $attachment['tcount'] = $tcount;
 
 
@@ -1052,20 +947,12 @@ if ( ! function_exists( 'wpuxss_eml_save_attachment_compat' ) ) {
 
 
 
-/**
- *  wpuxss_eml_delete_post
- *
- *  Based on /wp-admin/includes/ajax-actions.php
- *
- *  @since    2.3
- *  @created  17/06/16
- */
 
-add_action( 'wp_ajax_delete-post', 'wpuxss_eml_delete_post', 0 );
+add_action( 'wp_ajax_delete-post', 'wpesq3_ml_delete_post', 0 );
 
-if ( ! function_exists( 'wpuxss_eml_delete_post' ) ) {
+if ( ! function_exists( 'wpesq3_ml_delete_post' ) ) {
 
-    function wpuxss_eml_delete_post() {
+    function wpesq3_ml_delete_post() {
 
         if ( empty( $action ) )
             $action = 'delete-post';
@@ -1084,16 +971,16 @@ if ( ! function_exists( 'wpuxss_eml_delete_post' ) ) {
         if ( 'attachment' === $post->post_type ) {
 
             $response = array();
-            $wpuxss_eml_lib_options = get_option('wpuxss_eml_lib_options');
+            $wpesq3_ml_lib_options = get_option('wpesq3_ml_lib_options');
 
             if ( wp_delete_post( $id ) ) {
 
-                if ( (bool) $wpuxss_eml_lib_options['show_count'] ) {
+                if ( (bool) $wpesq3_ml_lib_options['show_count'] ) {
 
                     $terms = get_terms( get_object_taxonomies( 'attachment','names' ), array('fields'=>'all','get'=>'all') );
 
-                    foreach( wpuxss_eml_get_media_term_pairs( $terms, 'id=>tt_id' ) as $term_id => $tt_id ) {
-                        $response['tcount'][$term_id] = wpuxss_eml_get_media_term_count( $term_id, $tt_id );
+                    foreach( wpesq3_ml_get_media_term_pairs( $terms, 'id=>tt_id' ) as $term_id => $tt_id ) {
+                        $response['tcount'][$term_id] = wpesq3_ml_get_media_term_count( $term_id, $tt_id );
                     }
                 }
 
@@ -1111,20 +998,11 @@ if ( ! function_exists( 'wpuxss_eml_delete_post' ) ) {
 
 
 
-/**
- *  wpuxss_eml_save_attachment_order
- *
- *  Based on /wp-admin/includes/ajax-actions.php
- *
- *  @since    2.2
- *  @created  11/02/16
- */
+add_action( 'wp_ajax_save-attachment-order', 'wpesq3_ml_save_attachment_order', 0 );
 
-add_action( 'wp_ajax_save-attachment-order', 'wpuxss_eml_save_attachment_order', 0 );
+if ( ! function_exists( 'wpesq3_ml_save_attachment_order' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_save_attachment_order' ) ) {
-
-    function wpuxss_eml_save_attachment_order() {
+    function wpesq3_ml_save_attachment_order() {
 
         global $wpdb;
 
@@ -1187,21 +1065,15 @@ if ( ! function_exists( 'wpuxss_eml_save_attachment_order' ) ) {
 
 
 
-/**
- *  wpuxss_eml_get_eml_taxonomies
- *
- *  @since    2.2
- *  @created  13/03/16
- */
 
-if ( ! function_exists( 'wpuxss_eml_get_eml_taxonomies' ) ) {
+if ( ! function_exists( 'wpesq3_ml_get_eml_taxonomies' ) ) {
 
-    function wpuxss_eml_get_eml_taxonomies( $all_media_taxonomies = array() ) {
+    function wpesq3_ml_get_eml_taxonomies( $all_media_taxonomies = array() ) {
 
         if ( empty( $all_media_taxonomies ) )
-            $all_media_taxonomies = get_option( 'wpuxss_eml_taxonomies', array() );
+            $all_media_taxonomies = get_option( 'wpesq3_ml_taxonomies', array() );
 
-        $return = array_filter( $all_media_taxonomies, 'wpuxss_eml_filter_by_eml_taxonomies' );
+        $return = array_filter( $all_media_taxonomies, 'wpesq3_ml_filter_by_eml_taxonomies' );
 
         return $return;
     }
@@ -1209,16 +1081,10 @@ if ( ! function_exists( 'wpuxss_eml_get_eml_taxonomies' ) ) {
 
 
 
-/**
- *  wpuxss_eml_filter_by_eml_taxonomies
- *
- *  @since    2.2
- *  @created  13/03/16
- */
 
-if ( ! function_exists( 'wpuxss_eml_filter_by_eml_taxonomies' ) ) {
+if ( ! function_exists( 'wpesq3_ml_filter_by_eml_taxonomies' ) ) {
 
-    function wpuxss_eml_filter_by_eml_taxonomies( $taxonomy ) {
+    function wpesq3_ml_filter_by_eml_taxonomies( $taxonomy ) {
 
         return (bool) $taxonomy['eml_media'];
     }
@@ -1226,16 +1092,9 @@ if ( ! function_exists( 'wpuxss_eml_filter_by_eml_taxonomies' ) ) {
 
 
 
-/**
- *  wpuxss_eml_get_media_term_pairs
- *
- *  @since    2.3
- *  @created  19/06/16
- */
+if ( ! function_exists( 'wpesq3_ml_get_media_term_pairs' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_get_media_term_pairs' ) ) {
-
-    function wpuxss_eml_get_media_term_pairs( $terms = array(), $mode = 'id=>tt_id' ) {
+    function wpesq3_ml_get_media_term_pairs( $terms = array(), $mode = 'id=>tt_id' ) {
 
         $result = array();
 
@@ -1333,11 +1192,11 @@ if ( ! function_exists( '_eml_update_post_term_count' ) ) {
 
 
 // TODO: Quick Edit for the List mode (MediaFrame.EditAttachments)
-// add_filter( 'media_row_actions', 'wpuxss_eml_media_row_actions', 10, 2 );
+// add_filter( 'media_row_actions', 'wpesq3_ml_media_row_actions', 10, 2 );
 //
-// if ( ! function_exists( 'wpuxss_eml_media_row_actions' ) ) {
+// if ( ! function_exists( 'wpesq3_ml_media_row_actions' ) ) {
 //
-//     function wpuxss_eml_media_row_actions( $actions, $post ) {
+//     function wpesq3_ml_media_row_actions( $actions, $post ) {
 //
 //         $first = array_splice ( $actions, 0, 1 );
 //         $actions = array_merge ( $first, array( 'eml_quick_edit' => '<a href="#" data-attachment-id="' . $post->ID . '">Quick Edit</a>' ), $actions );
@@ -1348,25 +1207,17 @@ if ( ! function_exists( '_eml_update_post_term_count' ) ) {
 
 
 
-/**
- *  wpuxss_eml_the_posts
- *
- *  Natural sort order for titles (List Mode)
- *
- *  @since    2.5
- *  @created  12/01/18
- */
 
-add_filter( 'the_posts', 'wpuxss_eml_the_posts', 10, 2 );
+add_filter( 'the_posts', 'wpesq3_ml_the_posts', 10, 2 );
 
-if ( ! function_exists( 'wpuxss_eml_the_posts' ) ) {
+if ( ! function_exists( 'wpesq3_ml_the_posts' ) ) {
 
-    function wpuxss_eml_the_posts( $posts, $query ) {
+    function wpesq3_ml_the_posts( $posts, $query ) {
 
-        $wpuxss_eml_lib_options = get_option('wpuxss_eml_lib_options');
+        $wpesq3_ml_lib_options = get_option('wpesq3_ml_lib_options');
 
 
-        if ( ! (bool) $wpuxss_eml_lib_options['natural_sort'] ||
+        if ( ! (bool) $wpesq3_ml_lib_options['natural_sort'] ||
              ! isset($query->query_vars['orderby']) ||
              'title' !== $query->query_vars['orderby'] ||
              'attachment' !== $query->query_vars['post_type'] ) {
@@ -1375,7 +1226,7 @@ if ( ! function_exists( 'wpuxss_eml_the_posts' ) ) {
         }
 
 
-        usort( $posts, 'wpuxss_eml_cmp' );
+        usort( $posts, 'wpesq3_ml_cmp' );
 
         if ( "desc" === strtolower( $query->query_vars['order'] ) ) {
             $posts = array_reverse( $posts );
@@ -1387,18 +1238,9 @@ if ( ! function_exists( 'wpuxss_eml_the_posts' ) ) {
 
 
 
-/**
- *  wpuxss_eml_cmp
- *
- *  Apply natural compare to post titles
- *
- *  @since    2.7
- *  @created  15/06/18
- */
+if ( ! function_exists( 'wpesq3_ml_cmp' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_cmp' ) ) {
-
-    function wpuxss_eml_cmp( $a, $b ) {
+    function wpesq3_ml_cmp( $a, $b ) {
 
         return strnatcmp( $a->post_title, $b->post_title );
     }
@@ -1406,21 +1248,12 @@ if ( ! function_exists( 'wpuxss_eml_cmp' ) ) {
 
 
 
-/**
- *  wpuxss_eml_pre_get_posts
- *
- *  Taxonomy archive specific query (front-end)
- *  Ensure correct items order
- *
- *  @since    1.0
- *  @created  03/08/13
- */
 
-add_action( 'pre_get_posts', 'wpuxss_eml_pre_get_posts', 99 );
+add_action( 'pre_get_posts', 'wpesq3_ml_pre_get_posts', 99 );
 
-if ( ! function_exists('wpuxss_eml_pre_get_posts') ) {
+if ( ! function_exists('wpesq3_ml_pre_get_posts') ) {
 
-    function wpuxss_eml_pre_get_posts( $query ) {
+    function wpesq3_ml_pre_get_posts( $query ) {
 
         global $current_screen;
 
@@ -1441,13 +1274,13 @@ if ( ! function_exists('wpuxss_eml_pre_get_posts') ) {
         // front-end only
         if ( ! is_admin() ) {
 
-            $wpuxss_eml_tax_options = get_option('wpuxss_eml_tax_options');
+            $wpesq3_ml_tax_options = get_option('wpesq3_ml_tax_options');
 
-            if ( (bool) $wpuxss_eml_tax_options['tax_archives'] ) {
+            if ( (bool) $wpesq3_ml_tax_options['tax_archives'] ) {
 
-                $wpuxss_eml_taxonomies = get_option('wpuxss_eml_taxonomies');
+                $wpesq3_ml_taxonomies = get_option('wpesq3_ml_taxonomies');
 
-                foreach ( (array) $wpuxss_eml_taxonomies as $taxonomy => $params ) {
+                foreach ( (array) $wpesq3_ml_taxonomies as $taxonomy => $params ) {
 
                     if ( (bool) $params['assigned'] && (bool) $params['eml_media'] && is_tax( $taxonomy ) ) {
 
@@ -1473,10 +1306,10 @@ if ( ! function_exists('wpuxss_eml_pre_get_posts') ) {
         }
 
 
-        $wpuxss_eml_lib_options = get_option( 'wpuxss_eml_lib_options', array() );
+        $wpesq3_ml_lib_options = get_option( 'wpesq3_ml_lib_options', array() );
 
-        $orderby = ( 'menuOrder' === $wpuxss_eml_lib_options['media_orderby'] ) ? 'menu_order' : esc_attr( $wpuxss_eml_lib_options['media_orderby'] );
-        $order = esc_attr( $wpuxss_eml_lib_options['media_order'] );
+        $orderby = ( 'menuOrder' === $wpesq3_ml_lib_options['media_orderby'] ) ? 'menu_order' : esc_attr( $wpesq3_ml_lib_options['media_orderby'] );
+        $order = esc_attr( $wpesq3_ml_lib_options['media_order'] );
 
         $query->set('orderby', $orderby );
         $query->set('order', $order );
@@ -1485,18 +1318,11 @@ if ( ! function_exists('wpuxss_eml_pre_get_posts') ) {
 
 
 
-/**
- *  wpuxss_eml_print_media_templates
- *
- *  @since    2.4
- *  @created  07/01/17
- */
+add_action( 'print_media_templates', 'wpesq3_ml_print_media_templates' );
 
-add_action( 'print_media_templates', 'wpuxss_eml_print_media_templates' );
+if ( ! function_exists( 'wpesq3_ml_print_media_templates' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_print_media_templates' ) ) {
-
-    function wpuxss_eml_print_media_templates() {
+    function wpesq3_ml_print_media_templates() {
 
         $remove_button = '<button type="button" class="button-link attachment-close media-modal-icon"><span class="screen-reader-text">' . __( 'Remove' ) . '</span></button>';
 
@@ -1512,8 +1338,8 @@ if ( ! function_exists( 'wpuxss_eml_print_media_templates' ) ) {
                     <# } #>
                 </div>
 
-                <# show_caption = parseInt(wpuxss_eml_media_grid_l10n.grid_show_caption);
-                caption_type = wpuxss_eml_media_grid_l10n.grid_caption_type;
+                <# show_caption = parseInt(wpesq3_ml_media_grid_l10n.grid_show_caption);
+                caption_type = wpesq3_ml_media_grid_l10n.grid_caption_type;
                 caption = data[caption_type].length <= 15 ? data[caption_type] : data[caption_type].substring(0, 15) + '...';
                 non_image_caption = ( 'image' !== data.type && caption ) ? caption : data.filename;
                 title = show_caption ? data[caption_type] : ''; #>

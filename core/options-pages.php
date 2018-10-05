@@ -5,65 +5,58 @@ if ( ! defined( 'ABSPATH' ) )
 
 
 
-/**
- *  wpuxss_eml_register_setting
- *
- *  @since    1.0
- *  @created  03/08/13
- */
+add_action( 'admin_init', 'wpesq3_ml_register_setting' );
 
-add_action( 'admin_init', 'wpuxss_eml_register_setting' );
+if ( ! function_exists( 'wpesq3_ml_register_setting' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_register_setting' ) ) {
-
-    function wpuxss_eml_register_setting() {
+    function wpesq3_ml_register_setting() {
 
         // plugin settings: media library
         register_setting(
             'media-library', //option_group
-            'wpuxss_eml_lib_options', //option_name
-            'wpuxss_eml_lib_options_validate' //sanitize_callback
+            'wpesq3_ml_lib_options', //option_name
+            'wpesq3_ml_lib_options_validate' //sanitize_callback
         );
 
         // plugin settings: taxonomies
         register_setting(
             'media-taxonomies', //option_group
-            'wpuxss_eml_taxonomies', //option_name
-            'wpuxss_eml_taxonomies_validate' //sanitize_callback
+            'wpesq3_ml_taxonomies', //option_name
+            'wpesq3_ml_taxonomies_validate' //sanitize_callback
         );
 
         // plugin settings: taxonomies options
         register_setting(
             'media-taxonomies', //option_group
-            'wpuxss_eml_tax_options', //option_name
-            'wpuxss_eml_tax_options_validate' //sanitize_callback
+            'wpesq3_ml_tax_options', //option_name
+            'wpesq3_ml_tax_options_validate' //sanitize_callback
         );
 
         // plugin settings: mime types
         register_setting(
             'mime-types', //option_group
-            'wpuxss_eml_mimes', //option_name
-            'wpuxss_eml_mimes_validate' //sanitize_callback
+            'wpesq3_ml_mimes', //option_name
+            'wpesq3_ml_mimes_validate' //sanitize_callback
         );
 
         // plugin settings: network settings
         // no validation callback here
-        // called explicitly in wpuxss_eml_update_network_settings
+        // called explicitly in wpesq3_ml_update_network_settings
         register_setting(
             'eml-network-settings', //option_group
-            'wpuxss_eml_network_options' //option_name
+            'wpesq3_ml_network_options' //option_name
         );
 
         // plugin settings: mime types backup
         register_setting(
-            'wpuxss_eml_mimes_backup', //option_group
-            'wpuxss_eml_mimes_backup' //option_name
+            'wpesq3_ml_mimes_backup', //option_group
+            'wpesq3_ml_mimes_backup' //option_name
         );
 
         // plugin settings: all settings backup before import
         register_setting(
-            'wpuxss_eml_backup', //option_group
-            'wpuxss_eml_backup' //option_name
+            'wpesq3_ml_backup', //option_group
+            'wpesq3_ml_backup' //option_name
         );
     }
 }
@@ -71,23 +64,23 @@ if ( ! function_exists( 'wpuxss_eml_register_setting' ) ) {
 
 
 /**
- *  wpuxss_eml_admin_media_menu
+ *  wpesq3_ml_admin_media_menu
  *
  *  @since    2.6
  *  @created  28/04/18
  */
 
-add_action( 'admin_menu', 'wpuxss_eml_admin_media_menu' );
+add_action( 'admin_menu', 'wpesq3_ml_admin_media_menu' );
 
-if ( ! function_exists( 'wpuxss_eml_admin_media_menu' ) ) {
+if ( ! function_exists( 'wpesq3_ml_admin_media_menu' ) ) {
 
-    function wpuxss_eml_admin_media_menu() {
+    function wpesq3_ml_admin_media_menu() {
 
         if ( is_multisite() ) {
 
-            $wpuxss_eml_network_options = get_site_option( 'wpuxss_eml_network_options', array() );
+            $wpesq3_ml_network_options = get_site_option( 'wpesq3_ml_network_options', array() );
 
-            if ( ! current_user_can( 'manage_network_options' ) && ! (bool) $wpuxss_eml_network_options['media_settings'] )
+            if ( ! current_user_can( 'manage_network_options' ) && ! (bool) $wpesq3_ml_network_options['media_settings'] )
                 return;
         }
 
@@ -98,7 +91,7 @@ if ( ! function_exists( 'wpuxss_eml_admin_media_menu' ) ) {
             '',                                //menu_title
             'manage_options',                  //capability
             'media',                           //menu_slug
-            'wpuxss_eml_print_media_settings'  //callback
+            'wpesq3_ml_print_media_settings'  //callback
         );
 
         $eml_medialibrary_options_page = add_submenu_page(
@@ -107,7 +100,7 @@ if ( ! function_exists( 'wpuxss_eml_admin_media_menu' ) ) {
             __('Media Library','textdomain'),
             'manage_options',
             'media-library',
-            'wpuxss_eml_print_media_library_options'
+            'wpesq3_ml_print_media_library_options'
         );
 
         $eml_taxonomies_options_page = add_submenu_page(
@@ -116,7 +109,7 @@ if ( ! function_exists( 'wpuxss_eml_admin_media_menu' ) ) {
             __('Media Taxonomies','textdomain'),
             'manage_options',
             'media-taxonomies',
-            'wpuxss_eml_print_taxonomies_options'
+            'wpesq3_ml_print_taxonomies_options'
         );
 
         $eml_mimetype_options_page = add_submenu_page(
@@ -125,39 +118,39 @@ if ( ! function_exists( 'wpuxss_eml_admin_media_menu' ) ) {
             __('MIME Types','textdomain'),
             'manage_options',
             'mime-types',
-            'wpuxss_eml_print_mimetypes_options'
+            'wpesq3_ml_print_mimetypes_options'
         );
 
 
-        add_action( 'load-' . $eml_media_options_page, 'wpuxss_eml_load_media_options_page' );
-        add_action( $eml_media_options_page, 'wpuxss_eml_media_options_page' );
+        add_action( 'load-' . $eml_media_options_page, 'wpesq3_ml_load_media_options_page' );
+        add_action( $eml_media_options_page, 'wpesq3_ml_media_options_page' );
 
-        add_action('admin_print_scripts-' . $eml_medialibrary_options_page, 'wpuxss_eml_medialibrary_options_page_scripts');
-        add_action('admin_print_scripts-' . $eml_taxonomies_options_page, 'wpuxss_eml_taxonomies_options_page_scripts');
-        add_action('admin_print_scripts-' . $eml_mimetype_options_page, 'wpuxss_eml_mimetype_options_page_scripts');
+        add_action('admin_print_scripts-' . $eml_medialibrary_options_page, 'wpesq3_ml_medialibrary_options_page_scripts');
+        add_action('admin_print_scripts-' . $eml_taxonomies_options_page, 'wpesq3_ml_taxonomies_options_page_scripts');
+        add_action('admin_print_scripts-' . $eml_mimetype_options_page, 'wpesq3_ml_mimetype_options_page_scripts');
     }
 }
 
 
 
 /**
- *  wpuxss_eml_admin_utility_menu
+ *  wpesq3_ml_admin_utility_menu
  *
  *  @since    2.6
  *  @created  28/04/18
  */
 
-add_action( 'admin_menu', 'wpuxss_eml_admin_utility_menu' );
+add_action( 'admin_menu', 'wpesq3_ml_admin_utility_menu' );
 
-if ( ! function_exists( 'wpuxss_eml_admin_utility_menu' ) ) {
+if ( ! function_exists( 'wpesq3_ml_admin_utility_menu' ) ) {
 
-    function wpuxss_eml_admin_utility_menu() {
+    function wpesq3_ml_admin_utility_menu() {
 
         if ( is_multisite() ) {
 
-            $wpuxss_eml_network_options = get_site_option( 'wpuxss_eml_network_options', array() );
+            $wpesq3_ml_network_options = get_site_option( 'wpesq3_ml_network_options', array() );
 
-            if ( ! current_user_can( 'manage_network_options' ) && ! (bool) $wpuxss_eml_network_options['utilities'] )
+            if ( ! current_user_can( 'manage_network_options' ) && ! (bool) $wpesq3_ml_network_options['utilities'] )
                 return;
         }
 
@@ -167,27 +160,27 @@ if ( ! function_exists( 'wpuxss_eml_admin_utility_menu' ) ) {
            __('WordPrESQ Media Library','textdomain'),
            'manage_options',
            'eml-settings',
-           'wpuxss_eml_print_settings'
+           'wpesq3_ml_print_settings'
         );
 
-        add_action('admin_print_scripts-' . $eml_options_page, 'wpuxss_eml_options_page_scripts');
+        add_action('admin_print_scripts-' . $eml_options_page, 'wpesq3_ml_options_page_scripts');
     }
 }
 
 
 
 /**
- *  wpuxss_eml_network_admin_menu
+ *  wpesq3_ml_network_admin_menu
  *
  *  @since    2.6
  *  @created  22/04/18
  */
 
-add_action( 'network_admin_menu', 'wpuxss_eml_network_admin_menu' );
+add_action( 'network_admin_menu', 'wpesq3_ml_network_admin_menu' );
 
-if ( ! function_exists( 'wpuxss_eml_network_admin_menu' ) ) {
+if ( ! function_exists( 'wpesq3_ml_network_admin_menu' ) ) {
 
-    function wpuxss_eml_network_admin_menu() {
+    function wpesq3_ml_network_admin_menu() {
 
         $eml_network_options_page = add_submenu_page(
             'settings.php',
@@ -195,17 +188,17 @@ if ( ! function_exists( 'wpuxss_eml_network_admin_menu' ) ) {
             __('WordPrESQ Media Library','textdomain'),
             'manage_options',
             'eml-settings',
-            'wpuxss_eml_print_network_settings'
+            'wpesq3_ml_print_network_settings'
         );
 
-        add_action('admin_print_scripts-' . $eml_network_options_page, 'wpuxss_eml_options_page_scripts');
+        add_action('admin_print_scripts-' . $eml_network_options_page, 'wpesq3_ml_options_page_scripts');
     }
 }
 
 
 
 /**
- *  wpuxss_eml_submenu_order
+ *  wpesq3_ml_submenu_order
  *
  *  Custom admin media menu.
  *
@@ -213,11 +206,11 @@ if ( ! function_exists( 'wpuxss_eml_network_admin_menu' ) ) {
  *  @created  04/03/18
  */
 
-add_action( 'admin_menu', 'wpuxss_eml_submenu_order', 12 );
+add_action( 'admin_menu', 'wpesq3_ml_submenu_order', 12 );
 
-if ( ! function_exists( 'wpuxss_eml_submenu_order' ) ) {
+if ( ! function_exists( 'wpesq3_ml_submenu_order' ) ) {
 
-    function wpuxss_eml_submenu_order( $menu_order ) {
+    function wpesq3_ml_submenu_order( $menu_order ) {
 
         global $submenu;
 
@@ -255,7 +248,7 @@ if ( ! function_exists( 'wpuxss_eml_submenu_order' ) ) {
 
 
 /**
- *  wpuxss_eml_load_media_options_page
+ *  wpesq3_ml_load_media_options_page
  *
  *  Ensure compatibility with default options-media.php for third-parties
  *
@@ -263,9 +256,9 @@ if ( ! function_exists( 'wpuxss_eml_submenu_order' ) ) {
  *  @created  14/06/16
  */
 
-if ( ! function_exists( 'wpuxss_eml_load_media_options_page' ) ) {
+if ( ! function_exists( 'wpesq3_ml_load_media_options_page' ) ) {
 
-    function wpuxss_eml_load_media_options_page() {
+    function wpesq3_ml_load_media_options_page() {
 
         global $pagenow;
 
@@ -277,15 +270,15 @@ if ( ! function_exists( 'wpuxss_eml_load_media_options_page' ) ) {
         do_action( "admin_print_scripts-{$hook_suffix}" );
         do_action( "admin_head-{$hook_suffix}" );
 
-        add_filter( 'admin_body_class', 'wpuxss_eml_admin_body_class_for_media_options_page' );
-        add_filter( 'admin_title', 'wpuxss_eml_admin_title_for_media_options_page', 10, 2 );
+        add_filter( 'admin_body_class', 'wpesq3_ml_admin_body_class_for_media_options_page' );
+        add_filter( 'admin_title', 'wpesq3_ml_admin_title_for_media_options_page', 10, 2 );
     }
 }
 
 
 
 /**
- *  wpuxss_eml_admin_body_class_for_media_options_page
+ *  wpesq3_ml_admin_body_class_for_media_options_page
  *
  *  Ensure compatibility with default options-media.php for third-parties
  *
@@ -293,9 +286,9 @@ if ( ! function_exists( 'wpuxss_eml_load_media_options_page' ) ) {
  *  @created  16/12/16
  */
 
-if ( ! function_exists( 'wpuxss_eml_admin_body_class_for_media_options_page' ) ) {
+if ( ! function_exists( 'wpesq3_ml_admin_body_class_for_media_options_page' ) ) {
 
-    function wpuxss_eml_admin_body_class_for_media_options_page( $admin_body_class ) {
+    function wpesq3_ml_admin_body_class_for_media_options_page( $admin_body_class ) {
 
         $hook_suffix = 'options-media.php';
 
@@ -308,15 +301,15 @@ if ( ! function_exists( 'wpuxss_eml_admin_body_class_for_media_options_page' ) )
 
 
 /**
- *  wpuxss_eml_admin_title_for_media_options_page
+ *  wpesq3_ml_admin_title_for_media_options_page
  *
  *  @since    2.3.6
  *  @created  16/12/16
  */
 
-if ( ! function_exists( 'wpuxss_eml_admin_title_for_media_options_page' ) ) {
+if ( ! function_exists( 'wpesq3_ml_admin_title_for_media_options_page' ) ) {
 
-    function wpuxss_eml_admin_title_for_media_options_page( $admin_title, $title ) {
+    function wpesq3_ml_admin_title_for_media_options_page( $admin_title, $title ) {
 
         $admin_title = __('Media Settings','textdomain') . $admin_title;
 
@@ -327,7 +320,7 @@ if ( ! function_exists( 'wpuxss_eml_admin_title_for_media_options_page' ) ) {
 
 
 /**
- *  wpuxss_eml_media_options_page
+ *  wpesq3_ml_media_options_page
  *
  *  Ensure compatibility with default options-media.php for third-parties
  *
@@ -335,9 +328,9 @@ if ( ! function_exists( 'wpuxss_eml_admin_title_for_media_options_page' ) ) {
  *  @created  16/12/16
  */
 
-if ( ! function_exists( 'wpuxss_eml_media_options_page' ) ) {
+if ( ! function_exists( 'wpesq3_ml_media_options_page' ) ) {
 
-    function wpuxss_eml_media_options_page() {
+    function wpesq3_ml_media_options_page() {
 
         $hook_suffix = 'options-media.php';
 
@@ -348,15 +341,15 @@ if ( ! function_exists( 'wpuxss_eml_media_options_page' ) ) {
 
 
 /**
- *  wpuxss_eml_print_media_settings_tabs
+ *  wpesq3_ml_print_media_settings_tabs
  *
  *  @since    2.2.1
  *  @created  11/04/16
  */
 
-if ( ! function_exists( 'wpuxss_eml_print_media_settings_tabs' ) ) {
+if ( ! function_exists( 'wpesq3_ml_print_media_settings_tabs' ) ) {
 
-    function wpuxss_eml_print_media_settings_tabs( $active ) { ?>
+    function wpesq3_ml_print_media_settings_tabs( $active ) { ?>
 
         <h2 class="nav-tab-wrapper wp-clearfix" id="eml-options-media-tabs">
             <a href="<?php echo get_admin_url( null, 'options-general.php?page=media' ); ?>" class="nav-tab<?php echo ( 'media' == $active ) ? ' nav-tab-active' : ''; ?>"><?php _e( 'General', 'textdomain' ); ?></a>
@@ -372,7 +365,7 @@ if ( ! function_exists( 'wpuxss_eml_print_media_settings_tabs' ) ) {
 
 
 /**
- *  wpuxss_eml_print_media_settings
+ *  wpesq3_ml_print_media_settings
  *
  *  Based on wp-admin/options-media.php
  *
@@ -380,18 +373,18 @@ if ( ! function_exists( 'wpuxss_eml_print_media_settings_tabs' ) ) {
  *  @created  11/04/16
  */
 
-if ( ! function_exists( 'wpuxss_eml_print_media_settings' ) ) {
+if ( ! function_exists( 'wpesq3_ml_print_media_settings' ) ) {
 
-    function wpuxss_eml_print_media_settings() {
+    function wpesq3_ml_print_media_settings() {
 
         if ( ! current_user_can( 'manage_options' ) )
             wp_die( __('You do not have sufficient permissions to access this page.','textdomain') );
 
         if ( is_multisite() ) {
 
-            $wpuxss_eml_network_options = get_site_option( 'wpuxss_eml_network_options', array() );
+            $wpesq3_ml_network_options = get_site_option( 'wpesq3_ml_network_options', array() );
 
-            if ( ! current_user_can( 'manage_network_options' ) && ! (bool) $wpuxss_eml_network_options['media_settings'] )
+            if ( ! current_user_can( 'manage_network_options' ) && ! (bool) $wpesq3_ml_network_options['media_settings'] )
                 wp_die( __('You do not have sufficient permissions to access this page.','textdomain') );
         }
 
@@ -402,7 +395,7 @@ if ( ! function_exists( 'wpuxss_eml_print_media_settings' ) ) {
         <div class="wrap">
         <h1><?php echo esc_html( $title ); ?></h1>
 
-        <?php wpuxss_eml_print_media_settings_tabs( 'media' ); ?>
+        <?php wpesq3_ml_print_media_settings_tabs( 'media' ); ?>
 
         <form action="options.php" method="post">
         <?php settings_fields('media'); ?>
@@ -510,16 +503,9 @@ if ( ! function_exists( 'wpuxss_eml_print_media_settings' ) ) {
 
 
 
-/**
- *  wpuxss_eml_medialibrary_options_page_scripts
- *
- *  @since    2.2.1
- *  @created  11/04/16
- */
+if ( ! function_exists( 'wpesq3_ml_medialibrary_options_page_scripts' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_medialibrary_options_page_scripts' ) ) {
-
-    function wpuxss_eml_medialibrary_options_page_scripts() {
+    function wpesq3_ml_medialibrary_options_page_scripts() {
 
         global $wpesq3_ml_dir;
 
@@ -535,16 +521,9 @@ if ( ! function_exists( 'wpuxss_eml_medialibrary_options_page_scripts' ) ) {
 
 
 
-/**
- *  wpuxss_eml_taxonomies_options_page_scripts
- *
- *  @since    2.2
- *  @created  08/03/16
- */
+if ( ! function_exists( 'wpesq3_ml_taxonomies_options_page_scripts' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_taxonomies_options_page_scripts' ) ) {
-
-    function wpuxss_eml_taxonomies_options_page_scripts() {
+    function wpesq3_ml_taxonomies_options_page_scripts() {
 
         global $wpesq3_ml_dir;
 
@@ -606,7 +585,7 @@ if ( ! function_exists( 'wpuxss_eml_taxonomies_options_page_scripts' ) ) {
 
         wp_localize_script(
             'wpuxss-eml-taxonomies-options-script',
-            'wpuxss_eml_taxonomies_options_l10n_data',
+            'wpesq3_ml_taxonomies_options_l10n_data',
             $l10n_data
         );
     }
@@ -614,16 +593,9 @@ if ( ! function_exists( 'wpuxss_eml_taxonomies_options_page_scripts' ) ) {
 
 
 
-/**
- *  wpuxss_eml_mimetype_options_page_scripts
- *
- *  @since    2.2
- *  @created  08/03/16
- */
+if ( ! function_exists( 'wpesq3_ml_mimetype_options_page_scripts' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_mimetype_options_page_scripts' ) ) {
-
-    function wpuxss_eml_mimetype_options_page_scripts() {
+    function wpesq3_ml_mimetype_options_page_scripts() {
 
         global $wpesq3_ml_dir;
 
@@ -651,7 +623,7 @@ if ( ! function_exists( 'wpuxss_eml_mimetype_options_page_scripts' ) ) {
 
         wp_localize_script(
             'wpuxss-eml-mimetype-options-script',
-            'wpuxss_eml_mimetype_options_l10n_data',
+            'wpesq3_ml_mimetype_options_l10n_data',
             $l10n_data
         );
     }
@@ -659,16 +631,9 @@ if ( ! function_exists( 'wpuxss_eml_mimetype_options_page_scripts' ) ) {
 
 
 
-/**
- *  wpuxss_eml_options_page_scripts
- *
- *  @since    2.2
- *  @created  08/03/16
- */
+if ( ! function_exists( 'wpesq3_ml_options_page_scripts' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_options_page_scripts' ) ) {
-
-    function wpuxss_eml_options_page_scripts() {
+    function wpesq3_ml_options_page_scripts() {
 
         global $wpesq3_ml_dir;
 
@@ -709,7 +674,7 @@ if ( ! function_exists( 'wpuxss_eml_options_page_scripts' ) ) {
 
         wp_localize_script(
             'wpuxss-eml-options-script',
-            'wpuxss_eml_options_l10n_data',
+            'wpesq3_ml_options_l10n_data',
             $l10n_data
         );
     }
@@ -717,16 +682,9 @@ if ( ! function_exists( 'wpuxss_eml_options_page_scripts' ) ) {
 
 
 
-/**
- *  wpuxss_eml_print_settings
- *
- *  @since    2.1
- *  @created  25/10/15
- */
+if ( ! function_exists( 'wpesq3_ml_print_settings' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_print_settings' ) ) {
-
-    function wpuxss_eml_print_settings() {
+    function wpesq3_ml_print_settings() {
 
         if ( ! current_user_can( 'manage_options' ) )
             wp_die( __('You do not have sufficient permissions to access this page.','textdomain') );
@@ -734,9 +692,9 @@ if ( ! function_exists( 'wpuxss_eml_print_settings' ) ) {
 
         if ( is_multisite() ) {
 
-            $wpuxss_eml_network_options = get_site_option( 'wpuxss_eml_network_options', array() );
+            $wpesq3_ml_network_options = get_site_option( 'wpesq3_ml_network_options', array() );
 
-            if ( ! current_user_can( 'manage_network_options' ) && ! (bool) $wpuxss_eml_network_options['utilities'] )
+            if ( ! current_user_can( 'manage_network_options' ) && ! (bool) $wpesq3_ml_network_options['utilities'] )
                 wp_die( __('You do not have sufficient permissions to access this page.','textdomain') );
         } ?>
 
@@ -758,7 +716,7 @@ if ( ! function_exists( 'wpuxss_eml_print_settings' ) ) {
                             <div class="inside">
 
                                 <ul>
-                                    <li><strong><?php _e( 'Plugin settings to export:', 'textdomain' ); ?></strong></li>
+                                    <li><strong><?php _e( 'Media library settings to export:', 'textdomain' ); ?></strong></li>
                                     <li><?php _e( 'Settings > Media Library', 'textdomain' ); ?></li>
                                     <li><?php _e( 'Settings > Media Taxonomies', 'textdomain' ); ?></li>
                                     <li><?php _e( 'Settings > MIME Types', 'textdomain' ); ?></li>
@@ -770,7 +728,7 @@ if ( ! function_exists( 'wpuxss_eml_print_settings' ) ) {
                                 <form method="post">
                                     <input type='hidden' name='eml-settings-export' />
                                     <?php wp_nonce_field( 'eml_settings_export_nonce', 'eml-settings-export-nonce' ); ?>
-                                    <?php submit_button( __( 'Export Plugin Settings', 'textdomain' ), 'primary', 'eml-submit-settings-export', true ); ?>
+                                    <?php submit_button( __( 'Export Media Library Settings', 'textdomain' ), 'primary', 'eml-submit-settings-export', true ); ?>
                                 </form>
 
                             </div>
@@ -785,20 +743,20 @@ if ( ! function_exists( 'wpuxss_eml_print_settings' ) ) {
                             <div class="inside">
 
                                 <ul>
-                                    <li><strong><?php _e( 'Plugin settings to import:', 'textdomain' ); ?></strong></li>
+                                    <li><strong><?php _e( 'Media library settings to import:', 'textdomain' ); ?></strong></li>
                                     <li><?php _e( 'Settings > Media Library', 'textdomain' ); ?></li>
                                     <li><?php _e( 'Settings > Media Taxonomies', 'textdomain' ); ?></li>
                                     <li><?php _e( 'Settings > MIME Types', 'textdomain' ); ?></li>
                                 </ul>
 
-                                <p><?php _e( 'Plugin settings will be imported from a configuration JSON file which can be obtained by exporting the settings on another website using the export button above.', 'textdomain' ); ?></p>
+                                <p><?php _e( 'Media library settings will be imported from a configuration JSON file which can be obtained by exporting the settings on another website using the export button above.', 'textdomain' ); ?></p>
                                 <p><?php _e( 'All plugin settings will be overridden by the import. You will have a chance to restore current data from an automatic backup in case you are not satisfied with the result of the import.', 'textdomain' ); ?></p>
 
                                 <form method="post" enctype="multipart/form-data">
                                     <p><input type="file" name="import_file"/></p>
                                     <input type='hidden' name='eml-settings-import' />
                                     <?php wp_nonce_field( 'eml_settings_import_nonce', 'eml-settings-import-nonce' ); ?>
-                                    <?php submit_button(  __( 'Import Plugin Settings', 'textdomain' ), 'primary', 'eml-submit-settings-import' ); ?>
+                                    <?php submit_button(  __( 'Import Media Library Settings', 'textdomain' ), 'primary', 'eml-submit-settings-import' ); ?>
                                 </form>
 
                             </div>
@@ -806,15 +764,15 @@ if ( ! function_exists( 'wpuxss_eml_print_settings' ) ) {
                         </div>
 
 
-                        <?php $wpuxss_eml_backup = get_option( 'wpuxss_eml_backup' ); ?>
+                        <?php $wpesq3_ml_backup = get_option( 'wpesq3_ml_backup' ); ?>
 
                         <div class="postbox">
 
-                            <h3 class="hndle"><?php _e( 'Restore', 'textdomain' ); ?></h3>
+                            <h3 class="hndle"><?php _e( 'Restore Media Librarya Settings', 'textdomain' ); ?></h3>
 
                             <div class="inside">
 
-                                <?php if ( empty( $wpuxss_eml_backup ) ) : ?>
+                                <?php if ( empty( $wpesq3_ml_backup ) ) : ?>
 
                                     <p><?php _e( 'No backup available at the moment.', 'textdomain' ); ?></p>
 
@@ -825,7 +783,7 @@ if ( ! function_exists( 'wpuxss_eml_print_settings' ) ) {
                                     <p><?php _e( 'The backup has been automatically created before the latest import operation.', 'textdomain' ); ?></p>
 
                                     <ul>
-                                        <li><strong><?php _e( 'Plugin settings to restore:', 'textdomain' ); ?></strong></li>
+                                        <li><strong><?php _e( 'Media library settings to restore:', 'textdomain' ); ?></strong></li>
                                         <li><?php _e( 'Settings > Media Library', 'textdomain' ); ?></li>
                                         <li><?php _e( 'Settings > Media Taxonomies', 'textdomain' ); ?></li>
                                         <li><?php _e( 'Settings > MIME Types', 'textdomain' ); ?></li>
@@ -854,16 +812,16 @@ if ( ! function_exists( 'wpuxss_eml_print_settings' ) ) {
 
                                 <div class="inside">
 
-                                    <?php $wpuxss_eml_taxonomies = wpuxss_eml_get_eml_taxonomies(); ?>
+                                    <?php $wpesq3_ml_taxonomies = wpesq3_ml_get_eml_taxonomies(); ?>
 
                                     <ul>
                                         <li><strong><?php _e( 'What will be deleted:', 'textdomain' ); ?></strong></li>
-                                        <?php foreach( (array) $wpuxss_eml_taxonomies as $taxonomy => $params ) : ?>
+                                        <?php foreach( (array) $wpesq3_ml_taxonomies as $taxonomy => $params ) : ?>
                                             <li><?php _e( 'All', 'textdomain' );
                                             echo ' ' . esc_html( $params['labels']['name'] ); ?></li>
                                         <?php endforeach; ?>
-                                        <li><?php _e( 'All plugin options', 'textdomain' ); ?></li>
-                                        <li><?php _e( 'All plugin backups stored in the database', 'textdomain' ); ?></li>
+                                        <li><?php _e( 'All media library options', 'textdomain' ); ?></li>
+                                        <li><?php _e( 'All media library backups stored in the database', 'textdomain' ); ?></li>
                                     </ul>
 
                                     <ul>
@@ -872,21 +830,20 @@ if ( ! function_exists( 'wpuxss_eml_print_settings' ) ) {
                                         <li><?php _e( 'All taxonomies not listed above', 'textdomain' ); ?></li>
                                     </ul>
 
-                                    <p><?php _e( 'The plugin cannot delete itself for security reasons. Please delete it manually from the plugin list after the cleanup is complete.', 'textdomain' ); ?></p>
 
                                     <p><strong style="color:red;"><?php _e( 'If you are not sure about this operation it\'s HIGHLY RECOMMENDED to create a backup of your database prior to cleanup!', 'textdomain' ); ?></strong></p>
 
                                     <form id="eml-form-cleanup" method="post">
                                         <input type='hidden' name='eml-settings-cleanup' />
                                         <?php wp_nonce_field( 'eml_settings_cleanup_nonce', 'eml-settings-cleanup-nonce' ); ?>
-                                        <?php submit_button( __( 'Delete All Data & Deactivate', 'textdomain' ), 'primary', 'eml-submit-settings-cleanup', true ); ?>
+                                        <?php submit_button( __( 'Delete All Data', 'textdomain' ), 'primary', 'eml-submit-settings-cleanup', true ); ?>
                                     </form>
 
                                 </div>
 
                             </div>
 
-                            <?php do_action( 'wpuxss_eml_extend_settings_page' ); ?>
+                            <?php do_action( 'wpesq3_ml_extend_settings_page' ); ?>
 
                         <?php endif; ?>
 
@@ -903,17 +860,9 @@ if ( ! function_exists( 'wpuxss_eml_print_settings' ) ) {
 }
 
 
+if ( ! function_exists( 'wpesq3_ml_print_network_settings' ) ) {
 
-/**
- *  wpuxss_eml_print_network_settings
- *
- *  @since    2.6
- *  @created  22/04/18
- */
-
-if ( ! function_exists( 'wpuxss_eml_print_network_settings' ) ) {
-
-    function wpuxss_eml_print_network_settings() {
+    function wpesq3_ml_print_network_settings() {
 
         if ( ! current_user_can( 'manage_network_options' ) )
             wp_die( __('You do not have sufficient permissions to access this page.', 'textdomain') );
@@ -921,7 +870,7 @@ if ( ! function_exists( 'wpuxss_eml_print_network_settings' ) ) {
 
         settings_errors();
 
-        $wpuxss_eml_network_options = get_site_option( 'wpuxss_eml_network_options', array() ); ?>
+        $wpesq3_ml_network_options = get_site_option( 'wpesq3_ml_network_options', array() ); ?>
 
 
         <div id="wpuxss-eml-global-options-wrap" class="wrap eml-options">
@@ -943,7 +892,7 @@ if ( ! function_exists( 'wpuxss_eml_print_network_settings' ) ) {
 
                                 <?php if ( !  is_multisite() ) : ?>
 
-                                    <p class="description"><?php _e( 'No settings available. The plugin is not network activated.', 'textdomain' ); ?></p>
+                                    <p class="description"><?php _e( 'No settings available. The media library is not network activated.', 'textdomain' ); ?></p>
 
                                 <?php else : ?>
 
@@ -958,18 +907,18 @@ if ( ! function_exists( 'wpuxss_eml_print_network_settings' ) ) {
                                                 <td>
                                                     <fieldset>
                                                         <legend class="screen-reader-text"><span><?php _e('Enable Media Settings','textdomain'); ?></span></legend>
-                                                        <label><input name="wpuxss_eml_network_options[media_settings]" type="hidden" value="0" /><input name="wpuxss_eml_network_options[media_settings]" type="checkbox" value="1" <?php checked( true, (bool) $wpuxss_eml_network_options['media_settings'], true ); ?> /> <?php _e('Allow an individual site admin to edit enhanced Media Settings','textdomain'); ?></label>
+                                                        <label><input name="wpesq3_ml_network_options[media_settings]" type="hidden" value="0" /><input name="wpesq3_ml_network_options[media_settings]" type="checkbox" value="1" <?php checked( true, (bool) $wpesq3_ml_network_options['media_settings'], true ); ?> /> <?php _e('Allow an individual site admin to edit enhanced Media Settings','textdomain'); ?></label>
                                                         <p class="description"><?php _e( 'Otherwise, only a network (super) admin can see the menu and edit media settings.', 'textdomain' ); ?></p>
                                                     </fieldset>
                                                 </td>
                                             </tr>
 
                                             <tr>
-                                                <th scope="row"><?php _e('Plugin Utilities per site','textdomain'); ?></th>
+                                                <th scope="row"><?php _e('Media Library Utilities per site','textdomain'); ?></th>
                                                 <td>
                                                     <fieldset>
-                                                        <legend class="screen-reader-text"><span><?php _e('Enable plugin Utilities','textdomain'); ?></span></legend>
-                                                        <label><input name="wpuxss_eml_network_options[utilities]" type="hidden" value="0" /><input name="wpuxss_eml_network_options[utilities]" type="checkbox" value="1" <?php checked( true, (bool) $wpuxss_eml_network_options['utilities'], true ); ?> /> <?php _e('Allow an individual site admin to import / export / restore plugin settings and perform the complete cleanup for a specific site','textdomain'); ?></label>
+                                                        <legend class="screen-reader-text"><span><?php _e('Enable Media Library Utilities','textdomain'); ?></span></legend>
+                                                        <label><input name="wpesq3_ml_network_options[utilities]" type="hidden" value="0" /><input name="wpesq3_ml_network_options[utilities]" type="checkbox" value="1" <?php checked( true, (bool) $wpesq3_ml_network_options['utilities'], true ); ?> /> <?php _e('Allow an individual site admin to import / export / restore media library settings and perform the complete cleanup for a specific site','textdomain'); ?></label>
                                                         <p class="description"><?php _e( 'Otherwise, only a network (super) admin can see the menu and perform those actions.', 'textdomain' ); ?></p>
                                                     </fieldset>
                                                 </td>
@@ -994,7 +943,7 @@ if ( ! function_exists( 'wpuxss_eml_print_network_settings' ) ) {
 
                                 <?php if ( !  is_multisite() ) : ?>
 
-                                    <p class="description"><?php _e( 'No settings available. The plugin is not network activated.', 'textdomain' ); ?></p>
+                                    <p class="description"><?php _e( 'No settings available. The media library is not network activated.', 'textdomain' ); ?></p>
 
                                 <?php else : ?>
 
@@ -1059,13 +1008,13 @@ if ( ! function_exists( 'wpuxss_eml_print_network_settings' ) ) {
                             <div class="inside">
 
                                 <?php
-                                $wpuxss_eml_taxonomies = array();
+                                $wpesq3_ml_taxonomies = array();
 
                                 foreach( get_sites( array( 'fields' => 'ids' ) ) as $site_id ) :
 
                                     switch_to_blog( $site_id );
 
-                                    $wpuxss_eml_taxonomies = array_merge( $wpuxss_eml_taxonomies, wpuxss_eml_get_eml_taxonomies() );
+                                    $wpesq3_ml_taxonomies = array_merge( $wpesq3_ml_taxonomies, wpesq3_ml_get_eml_taxonomies() );
 
                                     restore_current_blog();
 
@@ -1074,13 +1023,13 @@ if ( ! function_exists( 'wpuxss_eml_print_network_settings' ) ) {
 
                                 <ul>
                                     <li><strong><?php _e( 'What will be deleted:', 'textdomain' ); ?></strong></li>
-                                    <?php foreach( (array) $wpuxss_eml_taxonomies as $taxonomy => $params ) : ?>
+                                    <?php foreach( (array) $wpesq3_ml_taxonomies as $taxonomy => $params ) : ?>
                                         <li><?php _e( 'All', 'textdomain' );
                                         echo ' ' . esc_html( $params['labels']['name'] ); ?></li>
                                     <?php endforeach; ?>
-                                    <li><?php _e( 'All plugin options on every site', 'textdomain' ); ?></li>
+                                    <li><?php _e( 'All media library options on every site', 'textdomain' ); ?></li>
                                     <li><?php _e( 'Network settings', 'textdomain' ); ?></li>
-                                    <li><?php _e( 'All plugin backups stored in the database', 'textdomain' ); ?></li>
+                                    <li><?php _e( 'All media library backups stored in the database', 'textdomain' ); ?></li>
                                 </ul>
 
                                 <ul>
@@ -1089,7 +1038,7 @@ if ( ! function_exists( 'wpuxss_eml_print_network_settings' ) ) {
                                     <li><?php _e( 'All taxonomies not listed above', 'textdomain' ); ?></li>
                                 </ul>
 
-                                <p><?php _e( 'The plugin cannot delete itself for security reasons. Please delete it manually from the plugin list after the cleanup is complete.', 'textdomain' ); ?></p>
+                                <p><?php _e( 'The media library cannot delete itself for security reasons. Please delete it manually from the media library list after the cleanup is complete.', 'textdomain' ); ?></p>
 
                                 <p><strong style="color:red;"><?php _e( 'If you are not sure about this operation it\'s HIGHLY RECOMMENDED to create a backup of your database prior to cleanup!', 'textdomain' ); ?></strong></p>
 
@@ -1103,7 +1052,7 @@ if ( ! function_exists( 'wpuxss_eml_print_network_settings' ) ) {
 
                         </div>
 
-                        <?php do_action( 'wpuxss_eml_extend_settings_page' ); ?>
+                        <?php do_action( 'wpesq3_ml_extend_settings_page' ); ?>
 
                     </div>
 
@@ -1119,18 +1068,11 @@ if ( ! function_exists( 'wpuxss_eml_print_network_settings' ) ) {
 
 
 
-/**
- *  wpuxss_eml_apply_settings_to_network
- *
- *  @since    2.7
- *  @created  21/06/18
- */
+add_action( 'wp_ajax_eml-apply-settings-to-network', 'wpesq3_ml_apply_settings_to_network' );
 
-add_action( 'wp_ajax_eml-apply-settings-to-network', 'wpuxss_eml_apply_settings_to_network' );
+if ( ! function_exists( 'wpesq3_ml_apply_settings_to_network' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_apply_settings_to_network' ) ) {
-
-    function wpuxss_eml_apply_settings_to_network() {
+    function wpesq3_ml_apply_settings_to_network() {
 
         if ( ! isset( $_REQUEST['settings'] ) )
             wp_send_json_error();
@@ -1144,10 +1086,10 @@ if ( ! function_exists( 'wpuxss_eml_apply_settings_to_network' ) ) {
 
             switch_to_blog( get_main_site_id() );
 
-            $wpuxss_eml_taxonomies = get_option( 'wpuxss_eml_taxonomies', array() );
-            $wpuxss_eml_lib_options = get_option( 'wpuxss_eml_lib_options', array() );
-            $wpuxss_eml_tax_options = get_option( 'wpuxss_eml_tax_options', array() );
-            $wpuxss_eml_mimes = get_option( 'wpuxss_eml_mimes', array() );
+            $wpesq3_ml_taxonomies = get_option( 'wpesq3_ml_taxonomies', array() );
+            $wpesq3_ml_lib_options = get_option( 'wpesq3_ml_lib_options', array() );
+            $wpesq3_ml_tax_options = get_option( 'wpesq3_ml_tax_options', array() );
+            $wpesq3_ml_mimes = get_option( 'wpesq3_ml_mimes', array() );
 
 
             foreach( get_sites( array( 'fields' => 'ids' ) ) as $site_id ) {
@@ -1156,16 +1098,16 @@ if ( ! function_exists( 'wpuxss_eml_apply_settings_to_network' ) ) {
 
                 switch ( $_REQUEST['settings'] ) {
                     case 'media-library':
-                        update_option( 'wpuxss_eml_lib_options', $wpuxss_eml_lib_options );
+                        update_option( 'wpesq3_ml_lib_options', $wpesq3_ml_lib_options );
                         break;
 
                     case 'media-taxonomies':
-                        update_option( 'wpuxss_eml_taxonomies', $wpuxss_eml_taxonomies );
-                        update_option( 'wpuxss_eml_tax_options', $wpuxss_eml_tax_options );
+                        update_option( 'wpesq3_ml_taxonomies', $wpesq3_ml_taxonomies );
+                        update_option( 'wpesq3_ml_tax_options', $wpesq3_ml_tax_options );
                         break;
 
                     case 'mime-types':
-                        update_option( 'wpuxss_eml_mimes', $wpuxss_eml_mimes );
+                        update_option( 'wpesq3_ml_mimes', $wpesq3_ml_mimes );
                         break;
                 }
 
@@ -1179,18 +1121,11 @@ if ( ! function_exists( 'wpuxss_eml_apply_settings_to_network' ) ) {
 
 
 
-/**
- *  wpuxss_eml_update_network_settings
- *
- *  @since    2.6
- *  @created  28/04/18
- */
+add_action( 'network_admin_menu', 'wpesq3_ml_update_network_settings' );
 
-add_action( 'network_admin_menu', 'wpuxss_eml_update_network_settings' );
+if ( ! function_exists( 'wpesq3_ml_update_network_settings' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_update_network_settings' ) ) {
-
-    function wpuxss_eml_update_network_settings() {
+    function wpesq3_ml_update_network_settings() {
 
         if ( ! isset($_POST['eml-submit-network-settings']) )
             return;
@@ -1201,11 +1136,11 @@ if ( ! function_exists( 'wpuxss_eml_update_network_settings' ) ) {
             return;
 
 
-        $wpuxss_eml_network_options = isset( $_POST['wpuxss_eml_network_options'] ) ? $_POST['wpuxss_eml_network_options'] : array();
+        $wpesq3_ml_network_options = isset( $_POST['wpesq3_ml_network_options'] ) ? $_POST['wpesq3_ml_network_options'] : array();
 
-        $wpuxss_eml_network_options = wpuxss_eml_tax_options_validate( $wpuxss_eml_network_options );
+        $wpesq3_ml_network_options = wpesq3_ml_tax_options_validate( $wpesq3_ml_network_options );
 
-        update_site_option( 'wpuxss_eml_network_options', $wpuxss_eml_network_options );
+        update_site_option( 'wpesq3_ml_network_options', $wpesq3_ml_network_options );
 
         add_settings_error(
             'eml-network-settings',
@@ -1218,18 +1153,11 @@ if ( ! function_exists( 'wpuxss_eml_update_network_settings' ) ) {
 
 
 
-/**
- *  wpuxss_eml_settings_export
- *
- *  @since    2.1
- *  @created  25/10/15
- */
+add_action( 'admin_init', 'wpesq3_ml_settings_export' );
 
-add_action( 'admin_init', 'wpuxss_eml_settings_export' );
+if ( ! function_exists( 'wpesq3_ml_settings_export' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_settings_export' ) ) {
-
-    function wpuxss_eml_settings_export() {
+    function wpesq3_ml_settings_export() {
 
         if ( ! isset( $_POST['eml-settings-export'] ) )
             return;
@@ -1242,14 +1170,14 @@ if ( ! function_exists( 'wpuxss_eml_settings_export' ) ) {
 
         if ( is_multisite() ) {
 
-            $wpuxss_eml_network_options = get_site_option( 'wpuxss_eml_network_options', array() );
+            $wpesq3_ml_network_options = get_site_option( 'wpesq3_ml_network_options', array() );
 
-            if ( ! current_user_can( 'manage_network_options' ) && ! (bool) $wpuxss_eml_network_options['utilities'] )
+            if ( ! current_user_can( 'manage_network_options' ) && ! (bool) $wpesq3_ml_network_options['utilities'] )
                 return;
         }
 
 
-        $settings = wpuxss_eml_get_settings();
+        $settings = wpesq3_ml_get_settings();
 
         ignore_user_abort( true );
 
@@ -1266,18 +1194,11 @@ if ( ! function_exists( 'wpuxss_eml_settings_export' ) ) {
 
 
 
-/**
- *  wpuxss_eml_settings_import
- *
- *  @since    2.1
- *  @created  25/10/15
- */
+add_action( 'admin_init', 'wpesq3_ml_settings_import' );
 
-add_action( 'admin_init', 'wpuxss_eml_settings_import' );
+if ( ! function_exists( 'wpesq3_ml_settings_import' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_settings_import' ) ) {
-
-    function wpuxss_eml_settings_import() {
+    function wpesq3_ml_settings_import() {
 
         if ( ! isset( $_POST['eml-settings-import'] ) )
             return;
@@ -1290,9 +1211,9 @@ if ( ! function_exists( 'wpuxss_eml_settings_import' ) ) {
 
         if ( is_multisite() ) {
 
-            $wpuxss_eml_network_options = get_site_option( 'wpuxss_eml_network_options', array() );
+            $wpesq3_ml_network_options = get_site_option( 'wpesq3_ml_network_options', array() );
 
-            if ( ! current_user_can( 'manage_network_options' ) && ! (bool) $wpuxss_eml_network_options['utilities'] )
+            if ( ! current_user_can( 'manage_network_options' ) && ! (bool) $wpesq3_ml_network_options['utilities'] )
                 return;
         }
 
@@ -1313,8 +1234,8 @@ if ( ! function_exists( 'wpuxss_eml_settings_import' ) ) {
 
 
         // backup settings
-        $settings = wpuxss_eml_get_settings();
-        update_option( 'wpuxss_eml_backup', $settings );
+        $settings = wpesq3_ml_get_settings();
+        update_option( 'wpesq3_ml_backup', $settings );
 
 
         $json_data = file_get_contents( $import_file['tmp_name'] );
@@ -1333,15 +1254,15 @@ if ( ! function_exists( 'wpuxss_eml_settings_import' ) ) {
         }
 
 
-        update_option( 'wpuxss_eml_taxonomies', $settings['taxonomies'] );
-        update_option( 'wpuxss_eml_lib_options', $settings['lib_options'] );
-        update_option( 'wpuxss_eml_tax_options', $settings['tax_options'] );
-        update_option( 'wpuxss_eml_mimes', $settings['mimes'] );
+        update_option( 'wpesq3_ml_taxonomies', $settings['taxonomies'] );
+        update_option( 'wpesq3_ml_lib_options', $settings['lib_options'] );
+        update_option( 'wpesq3_ml_tax_options', $settings['tax_options'] );
+        update_option( 'wpesq3_ml_mimes', $settings['mimes'] );
 
         add_settings_error(
             'eml-settings',
             'eml_settings_imported',
-            __('Plugin settings imported.', 'textdomain'),
+            __('Media library settings imported.', 'textdomain'),
             'updated'
         );
     }
@@ -1349,18 +1270,12 @@ if ( ! function_exists( 'wpuxss_eml_settings_import' ) ) {
 
 
 
-/**
- *  wpuxss_eml_settings_restoring
- *
- *  @since    2.1
- *  @created  25/10/15
- */
 
-add_action( 'admin_init', 'wpuxss_eml_settings_restoring' );
+add_action( 'admin_init', 'wpesq3_ml_settings_restoring' );
 
-if ( ! function_exists( 'wpuxss_eml_settings_restoring' ) ) {
+if ( ! function_exists( 'wpesq3_ml_settings_restoring' ) ) {
 
-    function wpuxss_eml_settings_restoring() {
+    function wpesq3_ml_settings_restoring() {
 
         if ( ! isset( $_POST['eml-settings-restore'] ) )
             return;
@@ -1373,28 +1288,28 @@ if ( ! function_exists( 'wpuxss_eml_settings_restoring' ) ) {
 
         if ( is_multisite() ) {
 
-            $wpuxss_eml_network_options = get_site_option( 'wpuxss_eml_network_options', array() );
+            $wpesq3_ml_network_options = get_site_option( 'wpesq3_ml_network_options', array() );
 
-            if ( ! current_user_can( 'manage_network_options' ) && ! (bool) $wpuxss_eml_network_options['utilities'] )
+            if ( ! current_user_can( 'manage_network_options' ) && ! (bool) $wpesq3_ml_network_options['utilities'] )
                 return;
         }
 
 
-        $wpuxss_eml_backup = get_option( 'wpuxss_eml_backup' );
+        $wpesq3_ml_backup = get_option( 'wpesq3_ml_backup' );
 
-        update_option( 'wpuxss_eml_taxonomies', $wpuxss_eml_backup['taxonomies'] );
-        update_option( 'wpuxss_eml_lib_options', $wpuxss_eml_backup['lib_options'] );
-        update_option( 'wpuxss_eml_tax_options', $wpuxss_eml_backup['tax_options'] );
-        update_option( 'wpuxss_eml_mimes', $wpuxss_eml_backup['mimes'] );
+        update_option( 'wpesq3_ml_taxonomies', $wpesq3_ml_backup['taxonomies'] );
+        update_option( 'wpesq3_ml_lib_options', $wpesq3_ml_backup['lib_options'] );
+        update_option( 'wpesq3_ml_tax_options', $wpesq3_ml_backup['tax_options'] );
+        update_option( 'wpesq3_ml_mimes', $wpesq3_ml_backup['mimes'] );
 
-        do_action( 'wpuxss_eml_pro_set_settings', $wpuxss_eml_backup );
+        do_action( 'wpesq3_ml_pro_set_settings', $wpesq3_ml_backup );
 
-        update_option( 'wpuxss_eml_backup', '' );
+        update_option( 'wpesq3_ml_backup', '' );
 
         add_settings_error(
             'eml-settings',
             'eml_settings_restored',
-            __('Plugin settings restored from the backup.', 'textdomain'),
+            __('Media library settings restored from the backup.', 'textdomain'),
             'updated'
         );
     }
@@ -1402,18 +1317,11 @@ if ( ! function_exists( 'wpuxss_eml_settings_restoring' ) ) {
 
 
 
-/**
- *  wpuxss_eml_settings_cleanup
- *
- *  @since    2.2
- *  @created  23/02/16
- */
+add_action( 'admin_init', 'wpesq3_ml_settings_cleanup' );
 
-add_action( 'admin_init', 'wpuxss_eml_settings_cleanup' );
+if ( ! function_exists( 'wpesq3_ml_settings_cleanup' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_settings_cleanup' ) ) {
-
-    function wpuxss_eml_settings_cleanup() {
+    function wpesq3_ml_settings_cleanup() {
 
         if ( ! isset( $_POST['eml-settings-cleanup'] ) )
             return;
@@ -1426,9 +1334,9 @@ if ( ! function_exists( 'wpuxss_eml_settings_cleanup' ) ) {
 
         if ( is_multisite() ) {
 
-            $wpuxss_eml_network_options = get_site_option( 'wpuxss_eml_network_options', array() );
+            $wpesq3_ml_network_options = get_site_option( 'wpesq3_ml_network_options', array() );
 
-            if ( ! current_user_can( 'manage_network_options' ) && ! (bool) $wpuxss_eml_network_options['utilities'] )
+            if ( ! current_user_can( 'manage_network_options' ) && ! (bool) $wpesq3_ml_network_options['utilities'] )
                 return;
         }
 
@@ -1439,8 +1347,8 @@ if ( ! function_exists( 'wpuxss_eml_settings_cleanup' ) ) {
 
                 switch_to_blog( $site_id );
 
-                wpuxss_eml_term_relationship_cleanup();
-                wpuxss_eml_options_cleanup();
+                wpesq3_ml_term_relationship_cleanup();
+                wpesq3_ml_options_cleanup();
 
 
                 restore_current_blog();
@@ -1448,12 +1356,12 @@ if ( ! function_exists( 'wpuxss_eml_settings_cleanup' ) ) {
         }
         else {
 
-            wpuxss_eml_term_relationship_cleanup();
-            wpuxss_eml_options_cleanup();
+            wpesq3_ml_term_relationship_cleanup();
+            wpesq3_ml_options_cleanup();
         }
 
-        wpuxss_eml_site_options_cleanup();
-        wpuxss_eml_transients_cleanup();
+        wpesq3_ml_site_options_cleanup();
+        wpesq3_ml_transients_cleanup();
 
 
         wp_safe_redirect( self_admin_url( 'themes.php' ) );
@@ -1464,23 +1372,23 @@ if ( ! function_exists( 'wpuxss_eml_settings_cleanup' ) ) {
 
 
 /**
- *  wpuxss_eml_term_relationship_cleanup
+ *  wpesq3_ml_term_relationship_cleanup
  *
  *  @since    2.6
  *  @created  28/04/18
  */
 
-if ( ! function_exists( 'wpuxss_eml_term_relationship_cleanup' ) ) {
+if ( ! function_exists( 'wpesq3_ml_term_relationship_cleanup' ) ) {
 
-    function wpuxss_eml_term_relationship_cleanup() {
+    function wpesq3_ml_term_relationship_cleanup() {
 
         global $wpdb;
 
 
-        foreach ( get_option( 'wpuxss_eml_taxonomies', array() ) as $taxonomy => $params ) {
+        foreach ( get_option( 'wpesq3_ml_taxonomies', array() ) as $taxonomy => $params ) {
 
             $terms = get_terms( $taxonomy, array( 'fields' => 'all', 'get' => 'all' ) );
-            $term_pairs = wpuxss_eml_get_media_term_pairs( $terms, 'id=>tt_id' );
+            $term_pairs = wpesq3_ml_get_media_term_pairs( $terms, 'id=>tt_id' );
 
             if ( (bool) $params['eml_media'] ) {
 
@@ -1540,28 +1448,21 @@ if ( ! function_exists( 'wpuxss_eml_term_relationship_cleanup' ) ) {
 
 
 
-/**
- *  wpuxss_eml_options_cleanup
- *
- *  @since    2.6
- *  @created  28/04/18
- */
+if ( ! function_exists( 'wpesq3_ml_options_cleanup' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_options_cleanup' ) ) {
-
-    function wpuxss_eml_options_cleanup() {
+    function wpesq3_ml_options_cleanup() {
 
         $options = array(
-            'wpuxss_eml_taxonomies',
-            'wpuxss_eml_lib_options',
-            'wpuxss_eml_tax_options',
-            'wpuxss_eml_mimes_backup',
-            'wpuxss_eml_mimes',
-            'wpuxss_eml_backup',
-            'wpuxss_eml_version'
+            'wpesq3_ml_taxonomies',
+            'wpesq3_ml_lib_options',
+            'wpesq3_ml_tax_options',
+            'wpesq3_ml_mimes_backup',
+            'wpesq3_ml_mimes',
+            'wpesq3_ml_backup',
+            'wpesq3_ml_version'
         );
 
-        $options = apply_filters( 'wpuxss_eml_pro_add_options', $options );
+        $options = apply_filters( 'wpesq3_ml_pro_add_options', $options );
 
         foreach ( $options as $option ) {
             delete_option( $option );
@@ -1570,28 +1471,20 @@ if ( ! function_exists( 'wpuxss_eml_options_cleanup' ) ) {
 }
 
 
+if ( ! function_exists( 'wpesq3_ml_site_options_cleanup' ) ) {
 
-/**
- *  wpuxss_eml_site_options_cleanup
- *
- *  @since    2.6
- *  @created  28/04/18
- */
-
-if ( ! function_exists( 'wpuxss_eml_site_options_cleanup' ) ) {
-
-    function wpuxss_eml_site_options_cleanup() {
+    function wpesq3_ml_site_options_cleanup() {
 
         $options = array(
-            'wpuxss_eml_version',
-            'wpuxss_eml_mimes_backup'
+            'wpesq3_ml_version',
+            'wpesq3_ml_mimes_backup'
         );
 
         if ( is_multisite() ) {
-            $options[] = 'wpuxss_eml_network_options';
+            $options[] = 'wpesq3_ml_network_options';
         }
 
-        $options = apply_filters( 'wpuxss_eml_pro_add_options', $options );
+        $options = apply_filters( 'wpesq3_ml_pro_add_options', $options );
 
         foreach ( $options as $option ) {
             delete_site_option( $option );
@@ -1601,20 +1494,14 @@ if ( ! function_exists( 'wpuxss_eml_site_options_cleanup' ) ) {
 
 
 
-/**
- *  wpuxss_eml_transients_cleanup
- *
- *  @since    2.6
- *  @created  28/04/18
- */
 
-if ( ! function_exists( 'wpuxss_eml_transients_cleanup' ) ) {
+if ( ! function_exists( 'wpesq3_ml_transients_cleanup' ) ) {
 
-    function wpuxss_eml_transients_cleanup() {
+    function wpesq3_ml_transients_cleanup() {
 
         $transients = array();
 
-        $transients = apply_filters( 'wpuxss_eml_pro_add_transients', $transients );
+        $transients = apply_filters( 'wpesq3_ml_pro_add_transients', $transients );
 
         foreach ( $transients as $transient ) {
             delete_site_transient( $transient );
@@ -1624,27 +1511,21 @@ if ( ! function_exists( 'wpuxss_eml_transients_cleanup' ) ) {
 
 
 
-/**
- *  wpuxss_eml_get_settings
- *
- *  @since    2.1
- *  @created  25/10/15
- */
 
-if ( ! function_exists( 'wpuxss_eml_get_settings' ) ) {
+if ( ! function_exists( 'wpesq3_ml_get_settings' ) ) {
 
-    function wpuxss_eml_get_settings() {
+    function wpesq3_ml_get_settings() {
 
-        $wpuxss_eml_taxonomies = get_option( 'wpuxss_eml_taxonomies' );
-        $wpuxss_eml_lib_options = get_option( 'wpuxss_eml_lib_options' );
-        $wpuxss_eml_tax_options = get_option( 'wpuxss_eml_tax_options' );
-        $wpuxss_eml_mimes = get_option( 'wpuxss_eml_mimes' );
+        $wpesq3_ml_taxonomies = get_option( 'wpesq3_ml_taxonomies' );
+        $wpesq3_ml_lib_options = get_option( 'wpesq3_ml_lib_options' );
+        $wpesq3_ml_tax_options = get_option( 'wpesq3_ml_tax_options' );
+        $wpesq3_ml_mimes = get_option( 'wpesq3_ml_mimes' );
 
         $settings = array (
-            'taxonomies' => $wpuxss_eml_taxonomies,
-            'lib_options' => $wpuxss_eml_lib_options,
-            'tax_options' => $wpuxss_eml_tax_options,
-            'mimes' => $wpuxss_eml_mimes,
+            'taxonomies' => $wpesq3_ml_taxonomies,
+            'lib_options' => $wpesq3_ml_lib_options,
+            'tax_options' => $wpesq3_ml_tax_options,
+            'mimes' => $wpesq3_ml_mimes,
         );
 
         return $settings;
@@ -1653,31 +1534,23 @@ if ( ! function_exists( 'wpuxss_eml_get_settings' ) ) {
 
 
 
-/**
- *  wpuxss_eml_print_media_library_options
- *
- *  @type     callback function
- *  @since    1.0
- *  @created  28/09/13
- */
+if ( ! function_exists( 'wpesq3_ml_print_media_library_options' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_print_media_library_options' ) ) {
-
-    function wpuxss_eml_print_media_library_options() {
+    function wpesq3_ml_print_media_library_options() {
 
         if ( ! current_user_can( 'manage_options' ) )
             wp_die( __( 'You do not have sufficient permissions to access this page.', 'textdomain' ) );
 
         if ( is_multisite() ) {
 
-            $wpuxss_eml_network_options = get_site_option( 'wpuxss_eml_network_options', array() );
+            $wpesq3_ml_network_options = get_site_option( 'wpesq3_ml_network_options', array() );
 
-            if ( ! current_user_can( 'manage_network_options' ) && ! (bool) $wpuxss_eml_network_options['media_settings'] )
+            if ( ! current_user_can( 'manage_network_options' ) && ! (bool) $wpesq3_ml_network_options['media_settings'] )
                 wp_die( __('You do not have sufficient permissions to access this page.','textdomain') );
         }
 
 
-        $wpuxss_eml_lib_options = get_option( 'wpuxss_eml_lib_options' );
+        $wpesq3_ml_lib_options = get_option( 'wpesq3_ml_lib_options' );
         $title = __('Media Settings'); ?>
 
 
@@ -1685,7 +1558,7 @@ if ( ! function_exists( 'wpuxss_eml_print_media_library_options' ) ) {
 
             <h1><?php echo esc_html( $title ); ?></h1>
 
-            <?php wpuxss_eml_print_media_settings_tabs( 'library' ); ?>
+            <?php wpesq3_ml_print_media_settings_tabs( 'library' ); ?>
 
             <div id="poststuff">
 
@@ -1711,8 +1584,8 @@ if ( ! function_exists( 'wpuxss_eml_print_media_library_options' ) ) {
                                             <td>
                                                 <fieldset>
                                                     <legend class="screen-reader-text"><span><?php _e('Force filters','textdomain'); ?></span></legend>
-                                                    <label><input name="wpuxss_eml_lib_options[force_filters]" type="hidden" value="0" /><input name="wpuxss_eml_lib_options[force_filters]" type="checkbox" value="1" <?php checked( true, (bool) $wpuxss_eml_lib_options['force_filters'], true ); ?> /> <?php _e('Show media filters for ANY Media Popup','textdomain'); ?></label>
-                                                    <p class="description"><?php _e( 'Try this if filters are not shown for third-party plugins or themes.', 'textdomain' ); ?></p>
+                                                    <label><input name="wpesq3_ml_lib_options[force_filters]" type="hidden" value="0" /><input name="wpesq3_ml_lib_options[force_filters]" type="checkbox" value="1" <?php checked( true, (bool) $wpesq3_ml_lib_options['force_filters'], true ); ?> /> <?php _e('Show media filters for ANY Media Popup','textdomain'); ?></label>
+                                                    <p class="description"><?php _e( 'Try this if filters are not shown for third-party media libraries or themes.', 'textdomain' ); ?></p>
                                                 </fieldset>
                                             </td>
                                         </tr>
@@ -1722,11 +1595,11 @@ if ( ! function_exists( 'wpuxss_eml_print_media_library_options' ) ) {
                                             <td>
                                                 <fieldset>
                                                     <legend class="screen-reader-text"><span><?php _e('Filters to show', 'textdomain'); ?></span></legend>
-                                                    <label><input name="wpuxss_eml_lib_options[filters_to_show][]" type="hidden" value="none" /><input name="wpuxss_eml_lib_options[filters_to_show][]" type="checkbox" value="types" <?php echo in_array('types', $wpuxss_eml_lib_options['filters_to_show']) ? 'checked' : ''; ?> /> <?php _e('Types','textdomain'); ?>
+                                                    <label><input name="wpesq3_ml_lib_options[filters_to_show][]" type="hidden" value="none" /><input name="wpesq3_ml_lib_options[filters_to_show][]" type="checkbox" value="types" <?php echo in_array('types', $wpesq3_ml_lib_options['filters_to_show']) ? 'checked' : ''; ?> /> <?php _e('Types','textdomain'); ?>
                                                     <em>(<?php _e( 'Can be disabled for Grid Mode only', 'textdomain' ); ?>)</em></label><br />
-                                                    <label><input name="wpuxss_eml_lib_options[filters_to_show][]" type="checkbox" value="dates" <?php echo in_array('dates', $wpuxss_eml_lib_options['filters_to_show']) ? 'checked' : ''; ?> /> <?php _e('Dates','textdomain'); ?></label><br />
-                                                    <label><input name="wpuxss_eml_lib_options[filters_to_show][]" type="checkbox" value="authors" <?php echo in_array('authors', $wpuxss_eml_lib_options['filters_to_show']) ? 'checked' : ''; ?> /> <?php _e('Authors','textdomain'); ?></label><br />
-                                                    <label><input name="wpuxss_eml_lib_options[filters_to_show][]" type="checkbox" value="taxonomies" <?php echo in_array('taxonomies', $wpuxss_eml_lib_options['filters_to_show']) ? 'checked' : ''; ?> /> <?php _e('Media Taxonomies','textdomain'); ?></label>
+                                                    <label><input name="wpesq3_ml_lib_options[filters_to_show][]" type="checkbox" value="dates" <?php echo in_array('dates', $wpesq3_ml_lib_options['filters_to_show']) ? 'checked' : ''; ?> /> <?php _e('Dates','textdomain'); ?></label><br />
+                                                    <label><input name="wpesq3_ml_lib_options[filters_to_show][]" type="checkbox" value="authors" <?php echo in_array('authors', $wpesq3_ml_lib_options['filters_to_show']) ? 'checked' : ''; ?> /> <?php _e('Authors','textdomain'); ?></label><br />
+                                                    <label><input name="wpesq3_ml_lib_options[filters_to_show][]" type="checkbox" value="taxonomies" <?php echo in_array('taxonomies', $wpesq3_ml_lib_options['filters_to_show']) ? 'checked' : ''; ?> /> <?php _e('Media Taxonomies','textdomain'); ?></label>
                                                 </fieldset>
                                             </td>
                                         </tr>
@@ -1736,7 +1609,7 @@ if ( ! function_exists( 'wpuxss_eml_print_media_library_options' ) ) {
                                             <td>
                                                 <fieldset>
                                                     <legend class="screen-reader-text"><span><?php _e('Show count','textdomain'); ?></span></legend>
-                                                    <label><input name="wpuxss_eml_lib_options[show_count]" type="hidden" value="0" /><input name="wpuxss_eml_lib_options[show_count]" type="checkbox" value="1" <?php checked( true, (bool) $wpuxss_eml_lib_options['show_count'], true ); ?> /> <?php _e('Show item count per category for media filters','textdomain'); ?></label>
+                                                    <label><input name="wpesq3_ml_lib_options[show_count]" type="hidden" value="0" /><input name="wpesq3_ml_lib_options[show_count]" type="checkbox" value="1" <?php checked( true, (bool) $wpesq3_ml_lib_options['show_count'], true ); ?> /> <?php _e('Show item count per category for media filters','textdomain'); ?></label>
                                                     <p class="description"><?php _e( 'Disable this if it slows down your site admin. The problem is resolved in the upcoming major update v3.0', 'textdomain' ); ?></p>
                                                 </fieldset>
                                             </td>
@@ -1747,7 +1620,7 @@ if ( ! function_exists( 'wpuxss_eml_print_media_library_options' ) ) {
                                             <td>
                                                 <fieldset>
                                                     <legend class="screen-reader-text"><span><?php _e('Include children','textdomain'); ?></span></legend>
-                                                    <label><input name="wpuxss_eml_lib_options[include_children]" type="hidden" value="0" /><input name="wpuxss_eml_lib_options[include_children]" type="checkbox" value="1" <?php checked( true, (bool) $wpuxss_eml_lib_options['include_children'], true ); ?> /> <?php _e('Show media items of child media categories as a result of filtering', 'textdomain'); ?></label>
+                                                    <label><input name="wpesq3_ml_lib_options[include_children]" type="hidden" value="0" /><input name="wpesq3_ml_lib_options[include_children]" type="checkbox" value="1" <?php checked( true, (bool) $wpesq3_ml_lib_options['include_children'], true ); ?> /> <?php _e('Show media items of child media categories as a result of filtering', 'textdomain'); ?></label>
                                                 </fieldset>
                                             </td>
                                         </tr>
@@ -1761,7 +1634,7 @@ if ( ! function_exists( 'wpuxss_eml_print_media_library_options' ) ) {
                             </div>
 
 
-                            <?php do_action( 'wpuxss_eml_extend_library_option_page' ); ?>
+                            <?php do_action( 'wpesq3_ml_extend_library_option_page' ); ?>
 
 
                             <h2><?php _e('Order','textdomain'); ?></h2>
@@ -1773,12 +1646,12 @@ if ( ! function_exists( 'wpuxss_eml_print_media_library_options' ) ) {
                                     <table class="form-table">
 
                                         <tr>
-                                            <th scope="row"><label for="wpuxss_eml_lib_options[media_orderby]"><?php _e('Order media items by','textdomain'); ?></label></th>
+                                            <th scope="row"><label for="wpesq3_ml_lib_options[media_orderby]"><?php _e('Order media items by','textdomain'); ?></label></th>
                                             <td>
-                                                <select name="wpuxss_eml_lib_options[media_orderby]" id="wpuxss_eml_lib_options_media_orderby">
-                                                    <option value="date" <?php selected( $wpuxss_eml_lib_options['media_orderby'], 'date' ); ?>><?php _e('Date','textdomain'); ?></option>
-                                                    <option value="title" <?php selected( $wpuxss_eml_lib_options['media_orderby'], 'title' ); ?>><?php _e('Title','textdomain'); ?></option>
-                                                    <option value="menuOrder" <?php selected( $wpuxss_eml_lib_options['media_orderby'], 'menuOrder' ); ?>><?php _e('Custom Order','textdomain'); ?></option>
+                                                <select name="wpesq3_ml_lib_options[media_orderby]" id="wpesq3_ml_lib_options_media_orderby">
+                                                    <option value="date" <?php selected( $wpesq3_ml_lib_options['media_orderby'], 'date' ); ?>><?php _e('Date','textdomain'); ?></option>
+                                                    <option value="title" <?php selected( $wpesq3_ml_lib_options['media_orderby'], 'title' ); ?>><?php _e('Title','textdomain'); ?></option>
+                                                    <option value="menuOrder" <?php selected( $wpesq3_ml_lib_options['media_orderby'], 'menuOrder' ); ?>><?php _e('Custom Order','textdomain'); ?></option>
                                                 </select>
                                                 <?php _e('For media library and media popups','textdomain'); ?>
                                                 <p class="description"><?php _e( 'Allows changing media items order by drag and drop with Custom Order value.', 'textdomain' ); ?></p>
@@ -1786,22 +1659,22 @@ if ( ! function_exists( 'wpuxss_eml_print_media_library_options' ) ) {
                                         </tr>
 
                                         <tr>
-                                            <th scope="row"><label for="wpuxss_eml_lib_options[media_order]"><?php _e('Sort order','textdomain'); ?></label></th>
+                                            <th scope="row"><label for="wpesq3_ml_lib_options[media_order]"><?php _e('Sort order','textdomain'); ?></label></th>
                                             <td>
-                                                <select name="wpuxss_eml_lib_options[media_order]" id="wpuxss_eml_lib_options_media_order">
-                                                    <option value="ASC" <?php selected( $wpuxss_eml_lib_options['media_order'], 'ASC' ); ?>><?php _e('Ascending','textdomain'); ?></option>
-                                                    <option value="DESC" <?php selected( $wpuxss_eml_lib_options['media_order'], 'DESC' ); ?>><?php _e('Descending','textdomain'); ?></option>
+                                                <select name="wpesq3_ml_lib_options[media_order]" id="wpesq3_ml_lib_options_media_order">
+                                                    <option value="ASC" <?php selected( $wpesq3_ml_lib_options['media_order'], 'ASC' ); ?>><?php _e('Ascending','textdomain'); ?></option>
+                                                    <option value="DESC" <?php selected( $wpesq3_ml_lib_options['media_order'], 'DESC' ); ?>><?php _e('Descending','textdomain'); ?></option>
                                                 </select>
                                                 <?php _e('For media library and media popups','textdomain'); ?>
                                             </td>
                                         </tr>
 
-                                        <tr id="wpuxss_eml_lib_options_natural_sort">
+                                        <tr id="wpesq3_ml_lib_options_natural_sort">
                                             <th scope="row"><?php _e('Natural sort order','textdomain'); ?></th>
                                             <td>
                                                 <fieldset>
                                                     <legend class="screen-reader-text"><span><?php _e('Natural sort order','textdomain'); ?></span></legend>
-                                                    <label><input name="wpuxss_eml_lib_options[natural_sort]" type="hidden" value="0" /><input name="wpuxss_eml_lib_options[natural_sort]" type="checkbox" value="1" <?php checked( true, (bool) $wpuxss_eml_lib_options['natural_sort'], true ); ?> /> <?php _e('Apply human-friendly sort order to Media Library and Galleries','textdomain'); ?></label>
+                                                    <label><input name="wpesq3_ml_lib_options[natural_sort]" type="hidden" value="0" /><input name="wpesq3_ml_lib_options[natural_sort]" type="checkbox" value="1" <?php checked( true, (bool) $wpesq3_ml_lib_options['natural_sort'], true ); ?> /> <?php _e('Apply human-friendly sort order to Media Library and Galleries','textdomain'); ?></label>
                                                     <p class="description"><?php _e( 'Example: [1, 2, 3, 10, 18, 22, abc-2, abc-11] instead of [1, 10, 18, 2, 22, 3, abc-11, abc-2]', 'textdomain' );  ?></p>
                                                 </fieldset>
                                             </td>
@@ -1828,18 +1701,18 @@ if ( ! function_exists( 'wpuxss_eml_print_media_library_options' ) ) {
                                             <td>
                                                 <fieldset>
                                                     <legend class="screen-reader-text"><span><?php _e('Show caption','textdomain'); ?></span></legend>
-                                                    <label><input name="wpuxss_eml_lib_options[grid_show_caption]" type="hidden" value="0" /><input id="wpuxss_eml_lib_options_grid_show_caption" name="wpuxss_eml_lib_options[grid_show_caption]" type="checkbox" value="1" <?php checked( true, (bool) $wpuxss_eml_lib_options['grid_show_caption'], true ); ?> /> <?php _e('Add text caption for media item thumbnails', 'textdomain'); ?></label>
+                                                    <label><input name="wpesq3_ml_lib_options[grid_show_caption]" type="hidden" value="0" /><input id="wpesq3_ml_lib_options_grid_show_caption" name="wpesq3_ml_lib_options[grid_show_caption]" type="checkbox" value="1" <?php checked( true, (bool) $wpesq3_ml_lib_options['grid_show_caption'], true ); ?> /> <?php _e('Add text caption for media item thumbnails', 'textdomain'); ?></label>
                                                 </fieldset>
                                             </td>
                                         </tr>
 
-                                        <tr id="wpuxss_eml_lib_options_grid_caption_type">
-                                            <th scope="row"><label for="wpuxss_eml_lib_options[media_order]"><?php _e('Caption type','textdomain'); ?></label></th>
+                                        <tr id="wpesq3_ml_lib_options_grid_caption_type">
+                                            <th scope="row"><label for="wpesq3_ml_lib_options[media_order]"><?php _e('Caption type','textdomain'); ?></label></th>
                                             <td>
-                                                <select name="wpuxss_eml_lib_options[grid_caption_type]">
-                                                    <option value="title" <?php selected( $wpuxss_eml_lib_options['grid_caption_type'], 'title' ); ?>><?php _e('Title','textdomain'); ?></option>
-                                                    <option value="filename" <?php selected( $wpuxss_eml_lib_options['grid_caption_type'], 'filename' ); ?>><?php _e('Filename','textdomain'); ?></option>
-                                                    <option value="caption" <?php selected( $wpuxss_eml_lib_options['grid_caption_type'], 'caption' ); ?>><?php _e('Caption','textdomain'); ?></option>
+                                                <select name="wpesq3_ml_lib_options[grid_caption_type]">
+                                                    <option value="title" <?php selected( $wpesq3_ml_lib_options['grid_caption_type'], 'title' ); ?>><?php _e('Title','textdomain'); ?></option>
+                                                    <option value="filename" <?php selected( $wpesq3_ml_lib_options['grid_caption_type'], 'filename' ); ?>><?php _e('Filename','textdomain'); ?></option>
+                                                    <option value="caption" <?php selected( $wpesq3_ml_lib_options['grid_caption_type'], 'caption' ); ?>><?php _e('Caption','textdomain'); ?></option>
                                                 </select>
                                             </td>
                                         </tr>
@@ -1865,25 +1738,10 @@ if ( ! function_exists( 'wpuxss_eml_print_media_library_options' ) ) {
                                             <td>
                                                 <fieldset>
                                                     <legend class="screen-reader-text"><span><?php _e('Enhanced media shortcodes','textdomain'); ?></span></legend>
-                                                    <label><input name="wpuxss_eml_lib_options[enhance_media_shortcodes]" type="hidden" value="0" /><input name="wpuxss_eml_lib_options[enhance_media_shortcodes]" type="checkbox" value="1" <?php checked( true, (bool) $wpuxss_eml_lib_options['enhance_media_shortcodes'], true ); ?> /> <?php _e('Enhance WordPress media shortcodes to make them understand media taxonomies, upload date, and media items number limit','textdomain'); ?></label>
+                                                    <label><input name="wpesq3_ml_lib_options[enhance_media_shortcodes]" type="hidden" value="0" /><input name="wpesq3_ml_lib_options[enhance_media_shortcodes]" type="checkbox" value="1" <?php checked( true, (bool) $wpesq3_ml_lib_options['enhance_media_shortcodes'], true ); ?> /> <?php _e('Enhance WordPress media shortcodes to make them understand media taxonomies, upload date, and media items number limit','textdomain'); ?></label>
                                                     <p class="description"><?php _e( 'Gallery example:', 'textdomain' );  ?> [gallery media_category="5" limit="10" monthnum="12" year="2015"]</p>
                                                     <p class="description"><?php _e( 'Audio playlist example:', 'textdomain' ); ?> [playlist media_category="5" limit="10" monthnum="12" year="2015"]</p>
                                                     <p class="description"><?php _e( 'Video playlist example:', 'textdomain' ); ?> [playlist type="video" media_category="5" limit="10" monthnum="12" year="2015"]</p>
-                                                    <p class="description"><?php
-                                                    printf(
-                                                        '<strong style="color:red">%s:</strong> ',
-                                                        __( 'Warning', 'textdomain' )
-                                                    );
-                                                    printf(
-                                                        __( 'Incompatibility with other gallery plugins or themes possible! <a href="%s">Learn more</a>.', 'textdomain' ),
-                                                        esc_url('https://wpuxsolutions.com/documents/textdomain/enhanced-gallery-possible-conflicts/')
-                                                    );
-                                                    echo ' ';
-                                                    printf(
-                                                        __( 'Please check out your gallery front-end and back-end functionality once this option activated. If you find an issue please inform plugin authors at %s or %s.', 'textdomain' ),
-                                                        '<a href="https://wordpress.org/support/plugin/textdomain">wordpress.org</a>',
-                                                        '<a href="https://wpuxsolutions.com/support/create-new-ticket/">wpuxsolutions.com</a>'
-                                                    ); ?></p>
                                                 </fieldset>
                                             </td>
                                         </tr>
@@ -1911,31 +1769,24 @@ if ( ! function_exists( 'wpuxss_eml_print_media_library_options' ) ) {
 
 
 
-/**
- *  wpuxss_eml_print_taxonomies_options
- *
- *  @type     callback function
- *  @since    1.0
- *  @created  28/09/13
- */
 
-if ( ! function_exists( 'wpuxss_eml_print_taxonomies_options' ) ) {
+if ( ! function_exists( 'wpesq3_ml_print_taxonomies_options' ) ) {
 
-    function wpuxss_eml_print_taxonomies_options() {
+    function wpesq3_ml_print_taxonomies_options() {
 
         if ( ! current_user_can( 'manage_options' ) )
             wp_die( __( 'You do not have sufficient permissions to access this page.', 'textdomain' ) );
 
         if ( is_multisite() ) {
 
-            $wpuxss_eml_network_options = get_site_option( 'wpuxss_eml_network_options', array() );
+            $wpesq3_ml_network_options = get_site_option( 'wpesq3_ml_network_options', array() );
 
-            if ( ! current_user_can( 'manage_network_options' ) && ! (bool) $wpuxss_eml_network_options['media_settings'] )
+            if ( ! current_user_can( 'manage_network_options' ) && ! (bool) $wpesq3_ml_network_options['media_settings'] )
                 wp_die( __('You do not have sufficient permissions to access this page.','textdomain') );
         }
 
 
-        $wpuxss_eml_taxonomies = get_option( 'wpuxss_eml_taxonomies' );
+        $wpesq3_ml_taxonomies = get_option( 'wpesq3_ml_taxonomies' );
         $title = __('Media Settings'); ?>
 
 
@@ -1943,7 +1794,7 @@ if ( ! function_exists( 'wpuxss_eml_print_taxonomies_options' ) ) {
 
             <h1><?php echo esc_html( $title ); ?></h1>
 
-            <?php wpuxss_eml_print_media_settings_tabs( 'taxonomies' ); ?>
+            <?php wpesq3_ml_print_media_settings_tabs( 'taxonomies' ); ?>
 
             <div id="poststuff">
 
@@ -1969,8 +1820,8 @@ if ( ! function_exists( 'wpuxss_eml_print_taxonomies_options' ) ) {
 
                                         if ( (in_array('attachment',$taxonomy->object_type) && count($taxonomy->object_type) == 1) || empty($taxonomy->object_type) ) {
 
-                                            $assigned = (bool) $wpuxss_eml_taxonomies[$taxonomy->name]['assigned'];
-                                            $eml_media = (bool) $wpuxss_eml_taxonomies[$taxonomy->name]['eml_media'];
+                                            $assigned = (bool) $wpesq3_ml_taxonomies[$taxonomy->name]['assigned'];
+                                            $eml_media = (bool) $wpesq3_ml_taxonomies[$taxonomy->name]['eml_media'];
 
                                             if ( $eml_media )
                                                 $li_class = 'wpuxss-eml-taxonomy';
@@ -1979,8 +1830,8 @@ if ( ! function_exists( 'wpuxss_eml_print_taxonomies_options' ) ) {
 
                                             $html .= '<li class="' . $li_class . '" id="' . esc_attr($taxonomy->name) . '">';
 
-                                            $html .= '<input name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][eml_media]" type="hidden" value="' . $eml_media . '" />';
-                                            $html .= '<label><input class="wpuxss-eml-assigned" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][assigned]" type="checkbox" value="1" ' . checked( true, $assigned, false ) . ' title="' . __('Assign Taxonomy','textdomain') . '" />' . esc_html($taxonomy->label) . '</label>';
+                                            $html .= '<input name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][eml_media]" type="hidden" value="' . $eml_media . '" />';
+                                            $html .= '<label><input class="wpuxss-eml-assigned" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][assigned]" type="checkbox" value="1" ' . checked( true, $assigned, false ) . ' title="' . __('Assign Taxonomy','textdomain') . '" />' . esc_html($taxonomy->label) . '</label>';
                                             $html .= '<a class="wpuxss-eml-button-edit" title="' . __('Edit Taxonomy','textdomain') . '" href="javascript:;">' . __('Edit','textdomain') . ' &darr;</a>';
 
                                             if ( $eml_media ) {
@@ -1992,17 +1843,17 @@ if ( ! function_exists( 'wpuxss_eml_print_taxonomies_options' ) ) {
                                                 $html .= '<div class="wpuxss-eml-labels-edit">';
                                                 $html .= '<h4>' . __('Labels','textdomain') . '</h4>';
                                                 $html .= '<ul>';
-                                                $html .= '<li><label>' . __('Singular','textdomain') . '</label><input type="text" class="wpuxss-eml-singular_name" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][labels][singular_name]" value="' . esc_html($taxonomy->labels->singular_name) . '" /></li>';
-                                                $html .= '<li><label>' . __('Plural','textdomain') . '</label><input type="text" class="wpuxss-eml-name" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][labels][name]" value="' . esc_html($taxonomy->labels->name) . '" /></li>';
-                                                $html .= '<li><label>' . __('Menu Name','textdomain') . '</label><input type="text" class="wpuxss-eml-menu_name" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][labels][menu_name]" value="' . esc_html($taxonomy->labels->menu_name) . '" /></li>';
-                                                $html .= '<li><label>' . __('All','textdomain') . '</label><input type="text" class="wpuxss-eml-all_items" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][labels][all_items]" value="' . esc_html($taxonomy->labels->all_items) . '" /></li>';
-                                                $html .= '<li><label>' . __('Edit','textdomain') . '</label><input type="text" class="wpuxss-eml-edit_item" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][labels][edit_item]" value="' . esc_html($taxonomy->labels->edit_item) . '" /></li>';
-                                                $html .= '<li><label>' . __('View','textdomain') . '</label><input type="text" class="wpuxss-eml-view_item" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][labels][view_item]" value="' . esc_html($taxonomy->labels->view_item) . '" /></li>';
-                                                $html .= '<li><label>' . __('Update','textdomain') . '</label><input type="text" class="wpuxss-eml-update_item" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][labels][update_item]" value="' . esc_html($taxonomy->labels->update_item) . '" /></li>';
-                                                $html .= '<li><label>' . __('Add New','textdomain') . '</label><input type="text" class="wpuxss-eml-add_new_item" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][labels][add_new_item]" value="' . esc_html($taxonomy->labels->add_new_item) . '" /></li>';
-                                                $html .= '<li><label>' . __('New','textdomain') . '</label><input type="text" class="wpuxss-eml-new_item_name" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][labels][new_item_name]" value="' . esc_html($taxonomy->labels->new_item_name) . '" /></li>';
-                                                $html .= '<li><label>' . __('Parent','textdomain') . '</label><input type="text" class="wpuxss-eml-parent_item" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][labels][parent_item]" value="' . esc_html($taxonomy->labels->parent_item) . '" /></li>';
-                                                $html .= '<li><label>' . __('Search','textdomain') . '</label><input type="text" class="wpuxss-eml-search_items" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][labels][search_items]" value="' . esc_html($taxonomy->labels->search_items) . '" /></li>';
+                                                $html .= '<li><label>' . __('Singular','textdomain') . '</label><input type="text" class="wpuxss-eml-singular_name" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][labels][singular_name]" value="' . esc_html($taxonomy->labels->singular_name) . '" /></li>';
+                                                $html .= '<li><label>' . __('Plural','textdomain') . '</label><input type="text" class="wpuxss-eml-name" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][labels][name]" value="' . esc_html($taxonomy->labels->name) . '" /></li>';
+                                                $html .= '<li><label>' . __('Menu Name','textdomain') . '</label><input type="text" class="wpuxss-eml-menu_name" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][labels][menu_name]" value="' . esc_html($taxonomy->labels->menu_name) . '" /></li>';
+                                                $html .= '<li><label>' . __('All','textdomain') . '</label><input type="text" class="wpuxss-eml-all_items" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][labels][all_items]" value="' . esc_html($taxonomy->labels->all_items) . '" /></li>';
+                                                $html .= '<li><label>' . __('Edit','textdomain') . '</label><input type="text" class="wpuxss-eml-edit_item" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][labels][edit_item]" value="' . esc_html($taxonomy->labels->edit_item) . '" /></li>';
+                                                $html .= '<li><label>' . __('View','textdomain') . '</label><input type="text" class="wpuxss-eml-view_item" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][labels][view_item]" value="' . esc_html($taxonomy->labels->view_item) . '" /></li>';
+                                                $html .= '<li><label>' . __('Update','textdomain') . '</label><input type="text" class="wpuxss-eml-update_item" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][labels][update_item]" value="' . esc_html($taxonomy->labels->update_item) . '" /></li>';
+                                                $html .= '<li><label>' . __('Add New','textdomain') . '</label><input type="text" class="wpuxss-eml-add_new_item" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][labels][add_new_item]" value="' . esc_html($taxonomy->labels->add_new_item) . '" /></li>';
+                                                $html .= '<li><label>' . __('New','textdomain') . '</label><input type="text" class="wpuxss-eml-new_item_name" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][labels][new_item_name]" value="' . esc_html($taxonomy->labels->new_item_name) . '" /></li>';
+                                                $html .= '<li><label>' . __('Parent','textdomain') . '</label><input type="text" class="wpuxss-eml-parent_item" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][labels][parent_item]" value="' . esc_html($taxonomy->labels->parent_item) . '" /></li>';
+                                                $html .= '<li><label>' . __('Search','textdomain') . '</label><input type="text" class="wpuxss-eml-search_items" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][labels][search_items]" value="' . esc_html($taxonomy->labels->search_items) . '" /></li>';
                                                 $html .= '</ul>';
                                                 $html .= '</div>';
 
@@ -2010,16 +1861,16 @@ if ( ! function_exists( 'wpuxss_eml_print_taxonomies_options' ) ) {
                                                 $html .= '<h4>' . __('Settings','textdomain') . '</h4>';
                                                 $html .= '<ul>';
                                                 $html .= '<li><label>' . __('Taxonomy Name','textdomain') . '</label><input type="text" class="wpuxss-eml-taxonomy-name" name="" value="' . esc_attr($taxonomy->name) . '" disabled="disabled" /></li>';
-                                                $html .= '<li><label>' . __('Hierarchical','textdomain') . '</label><input type="checkbox" class="wpuxss-eml-hierarchical" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][hierarchical]" value="1" ' . checked( true, (bool) $taxonomy->hierarchical, false ) . ' /></li>';
-                                                $html .= '<li><label>' . __('Column for List View','textdomain') . '</label><input type="checkbox" class="wpuxss-eml-show_admin_column" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][show_admin_column]" value="1" ' . checked( true, (bool) $taxonomy->show_admin_column, false ) . ' /></li>';
-                                                $html .= '<li><label>' . __('Filter for List View','textdomain') . '</label><input type="checkbox" class="wpuxss-eml-admin_filter" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][admin_filter]" value="1" ' . checked( true, (bool) $wpuxss_eml_taxonomies[$taxonomy->name]['admin_filter'], false ) . ' /></li>';
-                                                $html .= '<li><label>' . __('Filter for Grid View / Media Popup','textdomain') . '</label><input type="checkbox" class="wpuxss-eml-media_uploader_filter" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][media_uploader_filter]" value="1" ' . checked( true, (bool) $wpuxss_eml_taxonomies[$taxonomy->name]['media_uploader_filter'], false ) . ' /></li>';
-                                                $html .= '<li><label>' . __('Edit in Media Popup','textdomain') . '</label><input type="checkbox" class="wpuxss-eml-media_popup_taxonomy_edit" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][media_popup_taxonomy_edit]" value="1" ' . checked( true, (bool) $wpuxss_eml_taxonomies[$taxonomy->name]['media_popup_taxonomy_edit'], false ) . ' /></li>';
-                                                $html .= '<li><label>' . __('Show in Nav Menu','textdomain') . '</label><input type="checkbox" class="wpuxss-eml-show_in_nav_menus" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][show_in_nav_menus]" value="1" ' . checked( true, (bool) $taxonomy->show_in_nav_menus, false ) . ' /></li>';
-                                                $html .= '<li><label>' . __('Remember Terms Order (sort)','textdomain') . '</label><input type="checkbox" class="wpuxss-eml-sort" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][sort]" value="1" ' . checked( true, (bool) $taxonomy->sort, false ) . ' /></li>';
-                                                $html .= '<li><label>' . __('Show in REST','textdomain') . '</label><input type="checkbox" class="wpuxss-eml-show_in_rest" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][show_in_rest]" value="1" ' . checked( true, (bool) $taxonomy->show_in_rest, false ) . ' /></li>';
-                                                $html .= '<li><label>' . __('Rewrite Slug','textdomain') . '</label><input type="text" class="wpuxss-eml-slug" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][rewrite][slug]" value="' . esc_attr($taxonomy->rewrite['slug']) . '" /></li>';
-                                                $html .= '<li><label>' . __('Slug with Front','textdomain') . '</label><input type="checkbox" class="wpuxss-eml-with_front" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][rewrite][with_front]" value="1" ' . checked( true, (bool) $taxonomy->rewrite['with_front'], false ) . ' /></li>';
+                                                $html .= '<li><label>' . __('Hierarchical','textdomain') . '</label><input type="checkbox" class="wpuxss-eml-hierarchical" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][hierarchical]" value="1" ' . checked( true, (bool) $taxonomy->hierarchical, false ) . ' /></li>';
+                                                $html .= '<li><label>' . __('Column for List View','textdomain') . '</label><input type="checkbox" class="wpuxss-eml-show_admin_column" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][show_admin_column]" value="1" ' . checked( true, (bool) $taxonomy->show_admin_column, false ) . ' /></li>';
+                                                $html .= '<li><label>' . __('Filter for List View','textdomain') . '</label><input type="checkbox" class="wpuxss-eml-admin_filter" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][admin_filter]" value="1" ' . checked( true, (bool) $wpesq3_ml_taxonomies[$taxonomy->name]['admin_filter'], false ) . ' /></li>';
+                                                $html .= '<li><label>' . __('Filter for Grid View / Media Popup','textdomain') . '</label><input type="checkbox" class="wpuxss-eml-media_uploader_filter" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][media_uploader_filter]" value="1" ' . checked( true, (bool) $wpesq3_ml_taxonomies[$taxonomy->name]['media_uploader_filter'], false ) . ' /></li>';
+                                                $html .= '<li><label>' . __('Edit in Media Popup','textdomain') . '</label><input type="checkbox" class="wpuxss-eml-media_popup_taxonomy_edit" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][media_popup_taxonomy_edit]" value="1" ' . checked( true, (bool) $wpesq3_ml_taxonomies[$taxonomy->name]['media_popup_taxonomy_edit'], false ) . ' /></li>';
+                                                $html .= '<li><label>' . __('Show in Nav Menu','textdomain') . '</label><input type="checkbox" class="wpuxss-eml-show_in_nav_menus" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][show_in_nav_menus]" value="1" ' . checked( true, (bool) $taxonomy->show_in_nav_menus, false ) . ' /></li>';
+                                                $html .= '<li><label>' . __('Remember Terms Order (sort)','textdomain') . '</label><input type="checkbox" class="wpuxss-eml-sort" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][sort]" value="1" ' . checked( true, (bool) $taxonomy->sort, false ) . ' /></li>';
+                                                $html .= '<li><label>' . __('Show in REST','textdomain') . '</label><input type="checkbox" class="wpuxss-eml-show_in_rest" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][show_in_rest]" value="1" ' . checked( true, (bool) $taxonomy->show_in_rest, false ) . ' /></li>';
+                                                $html .= '<li><label>' . __('Rewrite Slug','textdomain') . '</label><input type="text" class="wpuxss-eml-slug" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][rewrite][slug]" value="' . esc_attr($taxonomy->rewrite['slug']) . '" /></li>';
+                                                $html .= '<li><label>' . __('Slug with Front','textdomain') . '</label><input type="checkbox" class="wpuxss-eml-with_front" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][rewrite][with_front]" value="1" ' . checked( true, (bool) $taxonomy->rewrite['with_front'], false ) . ' /></li>';
                                                 $html .= '</ul>';
                                                 $html .= '</div>';
 
@@ -2032,9 +1883,9 @@ if ( ! function_exists( 'wpuxss_eml_print_taxonomies_options' ) ) {
                                                 $html .= '<div class="wpuxss-eml-settings-edit">';
                                                 $html .= '<h4>' . __('Settings','textdomain') . '</h4>';
                                                 $html .= '<ul>';
-                                                $html .= '<li><label>' . __('Filter for List View','textdomain') . '</label><input type="checkbox" class="wpuxss-eml-admin_filter" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][admin_filter]" value="1" ' . checked( true, (bool) $wpuxss_eml_taxonomies[$taxonomy->name]['admin_filter'], false ) . ' /></li>';
-                                                $html .= '<li><label>' . __('Filter for Grid View / Media Popup','textdomain') . '</label><input type="checkbox" class="wpuxss-eml-media_uploader_filter" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][media_uploader_filter]" value="1" ' . checked( true, (bool) $wpuxss_eml_taxonomies[$taxonomy->name]['media_uploader_filter'], false ) . ' /></li>';
-                                                $html .= '<li><label>' . __('Edit in Media Popup','textdomain') . '</label><input type="checkbox" class="wpuxss-eml-media_popup_taxonomy_edit" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][media_popup_taxonomy_edit]" value="1" ' . checked( true, (bool) $wpuxss_eml_taxonomies[$taxonomy->name]['media_popup_taxonomy_edit'], false ) . ' /></li>';
+                                                $html .= '<li><label>' . __('Filter for List View','textdomain') . '</label><input type="checkbox" class="wpuxss-eml-admin_filter" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][admin_filter]" value="1" ' . checked( true, (bool) $wpesq3_ml_taxonomies[$taxonomy->name]['admin_filter'], false ) . ' /></li>';
+                                                $html .= '<li><label>' . __('Filter for Grid View / Media Popup','textdomain') . '</label><input type="checkbox" class="wpuxss-eml-media_uploader_filter" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][media_uploader_filter]" value="1" ' . checked( true, (bool) $wpesq3_ml_taxonomies[$taxonomy->name]['media_uploader_filter'], false ) . ' /></li>';
+                                                $html .= '<li><label>' . __('Edit in Media Popup','textdomain') . '</label><input type="checkbox" class="wpuxss-eml-media_popup_taxonomy_edit" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][media_popup_taxonomy_edit]" value="1" ' . checked( true, (bool) $wpesq3_ml_taxonomies[$taxonomy->name]['media_popup_taxonomy_edit'], false ) . ' /></li>';
                                                 $html .= '</ul>';
                                                 $html .= '</div>';
                                                 $html .= '</div>';
@@ -2129,19 +1980,19 @@ if ( ! function_exists( 'wpuxss_eml_print_taxonomies_options' ) ) {
 
 
                                                     $html .= '<li class="wpuxss-non-eml-taxonomy" id="' . esc_attr($taxonomy->name) . '">';
-                                                    $html .= '<input name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][eml_media]" type="hidden" value="' . esc_attr($wpuxss_eml_taxonomies[$taxonomy->name]['eml_media']) . '" />';
-                                                    $html .= '<label><input class="wpuxss-eml-assigned" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][assigned]" type="checkbox" value="1" ' . checked( true, (bool) $wpuxss_eml_taxonomies[$taxonomy->name]['assigned'], false ) . ' title="' . __('Assign Taxonomy','textdomain') . '" />' . esc_html($taxonomy->label) . '</label>';
+                                                    $html .= '<input name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][eml_media]" type="hidden" value="' . esc_attr($wpesq3_ml_taxonomies[$taxonomy->name]['eml_media']) . '" />';
+                                                    $html .= '<label><input class="wpuxss-eml-assigned" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][assigned]" type="checkbox" value="1" ' . checked( true, (bool) $wpesq3_ml_taxonomies[$taxonomy->name]['assigned'], false ) . ' title="' . __('Assign Taxonomy','textdomain') . '" />' . esc_html($taxonomy->label) . '</label>';
                                                     $html .= '<a class="wpuxss-eml-button-edit" title="' . __('Edit Taxonomy','textdomain') . '" href="javascript:;">' . __('Edit','textdomain') . ' &darr;</a>';
                                                     $html .= '<div class="wpuxss-eml-taxonomy-edit" style="display:none;">';
 
                                                     $html .= '<h4>' . __('Settings','textdomain') . '</h4>';
                                                     $html .= '<ul>';
-                                                    $html .= '<li><input type="checkbox" class="wpuxss-eml-admin_filter" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][admin_filter]" id="wpuxss_eml_taxonomies-' . esc_attr($taxonomy->name) . '-admin_filter" value="1" ' . checked( true, (bool) $wpuxss_eml_taxonomies[$taxonomy->name]['admin_filter'], false ) . ' /><label for="wpuxss_eml_taxonomies-' . esc_attr($taxonomy->name) . '-admin_filter">' . __('Filter for List View','textdomain') . '</label></li>';
-                                                    $html .= '<li><input type="checkbox" class="wpuxss-eml-media_uploader_filter" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][media_uploader_filter]" id="wpuxss_eml_taxonomies-' . esc_attr($taxonomy->name) . '-media_uploader_filter" value="1" ' . checked( true, (bool) $wpuxss_eml_taxonomies[$taxonomy->name]['media_uploader_filter'], false ) . ' /><label for="wpuxss_eml_taxonomies-' . esc_attr($taxonomy->name) . '-media_uploader_filter">' . __('Filter for Grid View / Media Popup','textdomain') . '</label></li>';
-                                                    $html .= '<li><input type="checkbox" class="wpuxss-eml-media_popup_taxonomy_edit" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][media_popup_taxonomy_edit]" id="wpuxss_eml_taxonomies-' . esc_attr($taxonomy->name) . '-media_popup_taxonomy_edit" value="1" ' . checked( true, (bool) $wpuxss_eml_taxonomies[$taxonomy->name]['media_popup_taxonomy_edit'], false ) . ' /><label for="wpuxss_eml_taxonomies-' . esc_attr($taxonomy->name) . '-media_popup_taxonomy_edit">' . __('Edit in Media Popup','textdomain') . '</label></li>';
+                                                    $html .= '<li><input type="checkbox" class="wpuxss-eml-admin_filter" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][admin_filter]" id="wpesq3_ml_taxonomies-' . esc_attr($taxonomy->name) . '-admin_filter" value="1" ' . checked( true, (bool) $wpesq3_ml_taxonomies[$taxonomy->name]['admin_filter'], false ) . ' /><label for="wpesq3_ml_taxonomies-' . esc_attr($taxonomy->name) . '-admin_filter">' . __('Filter for List View','textdomain') . '</label></li>';
+                                                    $html .= '<li><input type="checkbox" class="wpuxss-eml-media_uploader_filter" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][media_uploader_filter]" id="wpesq3_ml_taxonomies-' . esc_attr($taxonomy->name) . '-media_uploader_filter" value="1" ' . checked( true, (bool) $wpesq3_ml_taxonomies[$taxonomy->name]['media_uploader_filter'], false ) . ' /><label for="wpesq3_ml_taxonomies-' . esc_attr($taxonomy->name) . '-media_uploader_filter">' . __('Filter for Grid View / Media Popup','textdomain') . '</label></li>';
+                                                    $html .= '<li><input type="checkbox" class="wpuxss-eml-media_popup_taxonomy_edit" name="wpesq3_ml_taxonomies[' . esc_attr($taxonomy->name) . '][media_popup_taxonomy_edit]" id="wpesq3_ml_taxonomies-' . esc_attr($taxonomy->name) . '-media_popup_taxonomy_edit" value="1" ' . checked( true, (bool) $wpesq3_ml_taxonomies[$taxonomy->name]['media_popup_taxonomy_edit'], false ) . ' /><label for="wpesq3_ml_taxonomies-' . esc_attr($taxonomy->name) . '-media_popup_taxonomy_edit">' . __('Edit in Media Popup','textdomain') . '</label></li>';
 
                                                     $options = '';
-                                                    $html .= apply_filters( 'wpuxss_eml_extend_non_media_taxonomy_options', $options, $taxonomy, $post_type, $wpuxss_eml_taxonomies );
+                                                    $html .= apply_filters( 'wpesq3_ml_extend_non_media_taxonomy_options', $options, $taxonomy, $post_type, $wpesq3_ml_taxonomies );
 
                                                     $html .= '</ul>';
 
@@ -2169,7 +2020,7 @@ if ( ! function_exists( 'wpuxss_eml_print_taxonomies_options' ) ) {
 
                             <h2><?php _e('Options','textdomain'); ?></h2>
 
-                            <?php $wpuxss_eml_tax_options = get_option( 'wpuxss_eml_tax_options' ); ?>
+                            <?php $wpesq3_ml_tax_options = get_option( 'wpesq3_ml_tax_options' ); ?>
 
                             <div class="postbox">
 
@@ -2181,7 +2032,7 @@ if ( ! function_exists( 'wpuxss_eml_print_taxonomies_options' ) ) {
                                             <td>
                                                 <fieldset>
                                                     <legend class="screen-reader-text"><span><?php _e('Taxonomy archive pages','textdomain'); ?></span></legend>
-                                                    <label><input name="wpuxss_eml_tax_options[tax_archives]" type="hidden" value="0" /><input name="wpuxss_eml_tax_options[tax_archives]" type="checkbox" value="1" <?php checked( true, (bool) $wpuxss_eml_tax_options['tax_archives'], true ); ?> /> <?php _e('Turn on media taxonomy archive pages on the front-end','textdomain'); ?></label>
+                                                    <label><input name="wpesq3_ml_tax_options[tax_archives]" type="hidden" value="0" /><input name="wpesq3_ml_tax_options[tax_archives]" type="checkbox" value="1" <?php checked( true, (bool) $wpesq3_ml_tax_options['tax_archives'], true ); ?> /> <?php _e('Turn on media taxonomy archive pages on the front-end','textdomain'); ?></label>
                                                     <p class="description"><?php _e( 'Re-save your permalink settings after this option change to make it work.', 'textdomain' ); ?></p>
                                                 </fieldset>
                                             </td>
@@ -2192,7 +2043,7 @@ if ( ! function_exists( 'wpuxss_eml_print_taxonomies_options' ) ) {
                                             <td>
                                                 <fieldset>
                                                     <legend class="screen-reader-text"><span><?php _e('Assign all like hierarchical','textdomain'); ?></span></legend>
-                                                    <label><input name="wpuxss_eml_tax_options[edit_all_as_hierarchical]" type="hidden" value="0" /><input name="wpuxss_eml_tax_options[edit_all_as_hierarchical]" type="checkbox" value="1" <?php checked( true, (bool) $wpuxss_eml_tax_options['edit_all_as_hierarchical'], true ); ?> /> <?php _e('Show non-hierarchical taxonomies like hierarchical in Grid View / Media Popup','textdomain'); ?></label>
+                                                    <label><input name="wpesq3_ml_tax_options[edit_all_as_hierarchical]" type="hidden" value="0" /><input name="wpesq3_ml_tax_options[edit_all_as_hierarchical]" type="checkbox" value="1" <?php checked( true, (bool) $wpesq3_ml_tax_options['edit_all_as_hierarchical'], true ); ?> /> <?php _e('Show non-hierarchical taxonomies like hierarchical in Grid View / Media Popup','textdomain'); ?></label>
                                                 </fieldset>
                                             </td>
                                         </tr>
@@ -2205,7 +2056,7 @@ if ( ! function_exists( 'wpuxss_eml_print_taxonomies_options' ) ) {
 
                             </div>
 
-                            <?php do_action( 'wpuxss_eml_extend_taxonomies_option_page' ); ?>
+                            <?php do_action( 'wpesq3_ml_extend_taxonomies_option_page' ); ?>
 
                         </form>
 
@@ -2223,31 +2074,24 @@ if ( ! function_exists( 'wpuxss_eml_print_taxonomies_options' ) ) {
 
 
 
-/**
- *  wpuxss_eml_print_mimetypes_options
- *
- *  @type     callback function
- *  @since    1.0
- *  @created  28/09/13
- */
 
-if ( ! function_exists( 'wpuxss_eml_print_mimetypes_options' ) ) {
+if ( ! function_exists( 'wpesq3_ml_print_mimetypes_options' ) ) {
 
-    function wpuxss_eml_print_mimetypes_options() {
+    function wpesq3_ml_print_mimetypes_options() {
 
         if ( ! current_user_can('manage_options' ) )
             wp_die( __('You do not have sufficient permissions to access this page.','textdomain') );
 
         if ( is_multisite() ) {
 
-            $wpuxss_eml_network_options = get_site_option( 'wpuxss_eml_network_options', array() );
+            $wpesq3_ml_network_options = get_site_option( 'wpesq3_ml_network_options', array() );
 
-            if ( ! current_user_can( 'manage_network_options' ) && ! (bool) $wpuxss_eml_network_options['media_settings'] )
+            if ( ! current_user_can( 'manage_network_options' ) && ! (bool) $wpesq3_ml_network_options['media_settings'] )
                 wp_die( __('You do not have sufficient permissions to access this page.','textdomain') );
         }
 
 
-        $wpuxss_eml_mimes = get_option('wpuxss_eml_mimes');
+        $wpesq3_ml_mimes = get_option('wpesq3_ml_mimes');
 
         $title = __('Media Settings'); ?>
 
@@ -2258,7 +2102,7 @@ if ( ! function_exists( 'wpuxss_eml_print_mimetypes_options' ) ) {
                 <a class="add-new-h2 wpuxss-eml-button-create-mime" href="javascript:;">+ <?php _e('Add New MIME Type','textdomain'); ?></a>
             </h1>
 
-            <?php wpuxss_eml_print_media_settings_tabs( 'mimetypes' ); ?>
+            <?php wpesq3_ml_print_media_settings_tabs( 'mimetypes' ); ?>
 
             <div id="poststuff">
 
@@ -2270,7 +2114,7 @@ if ( ! function_exists( 'wpuxss_eml_print_mimetypes_options' ) ) {
 
                             <?php settings_fields( 'mime-types' ); ?>
 
-                            <?php wpuxss_eml_print_mimetypes_buttons(); ?>
+                            <?php wpesq3_ml_print_mimetypes_buttons(); ?>
 
                             <table class="wpuxss-eml-mime-type-list wp-list-table widefat" cellspacing="0">
                                 <thead>
@@ -2295,7 +2139,7 @@ if ( ! function_exists( 'wpuxss_eml_print_mimetypes_options' ) ) {
 
                                 <?php foreach ( $all_mimes as $type => $mime ) :
 
-                                    if ( isset( $wpuxss_eml_mimes[$type] ) ) :
+                                    if ( isset( $wpesq3_ml_mimes[$type] ) ) :
 
                                         $label = '<code>'. str_replace( '|', '</code>, <code>', esc_html($type) ) .'</code>';
 
@@ -2305,11 +2149,11 @@ if ( ! function_exists( 'wpuxss_eml_print_mimetypes_options' ) ) {
 
                                         <tr>
                                         <td id="<?php echo esc_attr($type); ?>"><?php echo $label; ?></td>
-                                        <td><code><?php echo esc_html($mime); ?></code><input type="hidden" class="wpuxss-eml-mime" name="wpuxss_eml_mimes[<?php echo esc_attr($type); ?>][mime]" value="<?php echo esc_html($wpuxss_eml_mimes[$type]['mime']); ?>" /></td>
-                                        <td><input type="text" name="wpuxss_eml_mimes[<?php echo esc_attr($type); ?>][singular]" value="<?php echo esc_html($wpuxss_eml_mimes[$type]['singular']); ?>" /></td>
-                                        <td><input type="text" name="wpuxss_eml_mimes[<?php echo esc_attr($type); ?>][plural]" value="<?php echo esc_html($wpuxss_eml_mimes[$type]['plural']); ?>" /></td>
-                                        <td class="checkbox_td"><input type="checkbox" name="wpuxss_eml_mimes[<?php echo esc_attr($type); ?>][filter]" title="<?php _e('Add Filter','textdomain'); ?>" value="1" <?php checked(true, (bool) $wpuxss_eml_mimes[$type]['filter']); ?> /></td>
-                                        <td class="checkbox_td"><input type="checkbox" name="wpuxss_eml_mimes[<?php echo esc_attr($type); ?>][upload]" title="<?php _e('Allow Upload','textdomain'); ?>" value="1" <?php checked(true, $allowed); ?> /></td>
+                                        <td><code><?php echo esc_html($mime); ?></code><input type="hidden" class="wpuxss-eml-mime" name="wpesq3_ml_mimes[<?php echo esc_attr($type); ?>][mime]" value="<?php echo esc_html($wpesq3_ml_mimes[$type]['mime']); ?>" /></td>
+                                        <td><input type="text" name="wpesq3_ml_mimes[<?php echo esc_attr($type); ?>][singular]" value="<?php echo esc_html($wpesq3_ml_mimes[$type]['singular']); ?>" /></td>
+                                        <td><input type="text" name="wpesq3_ml_mimes[<?php echo esc_attr($type); ?>][plural]" value="<?php echo esc_html($wpesq3_ml_mimes[$type]['plural']); ?>" /></td>
+                                        <td class="checkbox_td"><input type="checkbox" name="wpesq3_ml_mimes[<?php echo esc_attr($type); ?>][filter]" title="<?php _e('Add Filter','textdomain'); ?>" value="1" <?php checked(true, (bool) $wpesq3_ml_mimes[$type]['filter']); ?> /></td>
+                                        <td class="checkbox_td"><input type="checkbox" name="wpesq3_ml_mimes[<?php echo esc_attr($type); ?>][upload]" title="<?php _e('Allow Upload','textdomain'); ?>" value="1" <?php checked(true, $allowed); ?> /></td>
                                         <td><a class="wpuxss-eml-button-remove" title="<?php _e('Delete MIME Type','textdomain'); ?>" href="javascript:;">&ndash;</a></td>
                                         </tr>
 
@@ -2340,7 +2184,7 @@ if ( ! function_exists( 'wpuxss_eml_print_mimetypes_options' ) ) {
                                 </tfoot>
                             </table>
 
-                            <?php wpuxss_eml_print_mimetypes_buttons(); ?>
+                            <?php wpesq3_ml_print_mimetypes_buttons(); ?>
 
                         </form>
 
@@ -2358,16 +2202,9 @@ if ( ! function_exists( 'wpuxss_eml_print_mimetypes_options' ) ) {
 
 
 
-/**
- *  wpuxss_eml_print_mimetypes_buttons
- *
- *  @since    2.3.1
- *  @created  01/08/16
- */
+if ( ! function_exists( 'wpesq3_ml_print_mimetypes_buttons' ) ) {
 
-if ( ! function_exists( 'wpuxss_eml_print_mimetypes_buttons' ) ) {
-
-    function wpuxss_eml_print_mimetypes_buttons() { ?>
+    function wpesq3_ml_print_mimetypes_buttons() { ?>
 
         <p class="submit">
             <?php submit_button( __( 'Save Changes' ), 'primary', 'eml-save-mime-types-settings', false, array( 'id' => 'eml-submit-settings-save-mime-types' ) ); ?>

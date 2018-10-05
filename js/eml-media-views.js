@@ -11,7 +11,7 @@ window.eml = window.eml || { l10n: {} };
         original = {};
 
 
-    _.extend( eml.l10n, wpuxss_eml_media_views_l10n );
+    _.extend( eml.l10n, wpesq3_ml_media_views_l10n );
     _.defaults( eml.l10n, l10n_defaults );
 
 

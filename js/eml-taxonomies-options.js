@@ -3,7 +3,7 @@ window.eml = window.eml || { l10n: {} };
 
 ( function( $, _ ) {
 
-    _.extend( eml.l10n, wpuxss_eml_taxonomies_options_l10n_data );
+    _.extend( eml.l10n, wpesq3_ml_taxonomies_options_l10n_data );
 
 
     // Click on "Remove Taxonomy" button
@@ -420,18 +420,18 @@ window.eml = window.eml || { l10n: {} };
 
 
         $.each( fields, function( key, field ) {
-            taxonomy_clone_box.find(field).attr('name','wpuxss_eml_taxonomies['+taxonomy_name+']['+key+']');
+            taxonomy_clone_box.find(field).attr('name','wpesq3_ml_taxonomies['+taxonomy_name+']['+key+']');
         });
 
 
         $.each( tax_fields, function( key, field ) {
 
             if ( key === field ) {
-                taxonomy_clone_box.find('.wpuxss-eml-'+field).attr('name','wpuxss_eml_taxonomies['+taxonomy_name+']['+field+']');
+                taxonomy_clone_box.find('.wpuxss-eml-'+field).attr('name','wpesq3_ml_taxonomies['+taxonomy_name+']['+field+']');
             }
             else {
                 $.each( field, function( i, field ) {
-                    taxonomy_clone_box.find('.wpuxss-eml-'+field).attr('name','wpuxss_eml_taxonomies['+taxonomy_name+']['+key+']['+field+']');
+                    taxonomy_clone_box.find('.wpuxss-eml-'+field).attr('name','wpesq3_ml_taxonomies['+taxonomy_name+']['+key+']['+field+']');
                 });
             }
         });

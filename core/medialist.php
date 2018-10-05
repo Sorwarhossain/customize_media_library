@@ -15,7 +15,7 @@ if ( ! function_exists( 'wpesq3_ml_shortcode_atts' ) ) {
 
     function wpesq3_ml_shortcode_atts( $output, $defaults, $atts ) {
 
-        $wpuxss_eml_lib_options = get_option( 'wpuxss_eml_lib_options', array() );
+        $wpesq3_ml_lib_options = get_option( 'wpesq3_ml_lib_options', array() );
 
         $custom_query = false;
         $id = isset( $atts['id'] ) ? intval( $atts['id'] ) : 0;
@@ -45,7 +45,7 @@ if ( ! function_exists( 'wpesq3_ml_shortcode_atts' ) ) {
                     'field' => $field,
                     'terms' => $terms,
                     'operator' => 'IN',
-                    'include_children' => (bool) $wpuxss_eml_lib_options['include_children']
+                    'include_children' => (bool) $wpesq3_ml_lib_options['include_children']
                 );
 
                 unset( $atts[$taxonomy] );
@@ -57,11 +57,11 @@ if ( ! function_exists( 'wpesq3_ml_shortcode_atts' ) ) {
         if ( empty( $atts['ids'] ) || $custom_query ) {
 
             if ( empty( $atts['orderby'] ) || 'post__in' === $atts['orderby'] ) {
-                $output['orderby'] = $atts['orderby'] = ( 'menuOrder' === $wpuxss_eml_lib_options['media_orderby'] ) ? 'menu_order' : esc_attr( $wpuxss_eml_lib_options['media_orderby'] );
+                $output['orderby'] = $atts['orderby'] = ( 'menuOrder' === $wpesq3_ml_lib_options['media_orderby'] ) ? 'menu_order' : esc_attr( $wpesq3_ml_lib_options['media_orderby'] );
             }
 
             if ( empty( $atts['order'] ) ) {
-                $output['order'] = $atts['order'] = esc_attr( $wpuxss_eml_lib_options['media_order'] );
+                $output['order'] = $atts['order'] = esc_attr( $wpesq3_ml_lib_options['media_order'] );
             }
         }
 
@@ -139,7 +139,7 @@ if ( ! function_exists( 'wpesq3_ml_shortcode_atts' ) ) {
 
         if ( $ids ) {
             $output['ids'] = $output['include'] = implode( ',', $ids );
-            $output['orderby'] = ( 'title' === $output['orderby'] && (bool) $wpuxss_eml_lib_options['natural_sort'] ) ? 'post__in' : $output['orderby'];
+            $output['orderby'] = ( 'title' === $output['orderby'] && (bool) $wpesq3_ml_lib_options['natural_sort'] ) ? 'post__in' : $output['orderby'];
         }
 
         return $output;

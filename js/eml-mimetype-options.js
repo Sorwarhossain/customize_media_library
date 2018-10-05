@@ -3,7 +3,7 @@ window.eml = window.eml || { l10n: {} };
 
 ( function( $, _ ) {
 
-    _.extend( eml.l10n, wpuxss_eml_mimetype_options_l10n_data );
+    _.extend( eml.l10n, wpesq3_ml_mimetype_options_l10n_data );
 
 
 
@@ -33,11 +33,11 @@ window.eml = window.eml || { l10n: {} };
 
         $(this).val(extension);
 
-        mime_type_tr.find('.wpuxss-eml-mime').attr('name','wpuxss_eml_mimes['+extension+'][mime]');
-        mime_type_tr.find('.wpuxss-eml-singular').attr('name','wpuxss_eml_mimes['+extension+'][singular]');
-        mime_type_tr.find('.wpuxss-eml-plural').attr('name','wpuxss_eml_mimes['+extension+'][plural]');
-        mime_type_tr.find('.wpuxss-eml-filter').attr('name','wpuxss_eml_mimes['+extension+'][filter]');
-        mime_type_tr.find('.wpuxss-eml-upload').attr('name','wpuxss_eml_mimes['+extension+'][upload]');
+        mime_type_tr.find('.wpuxss-eml-mime').attr('name','wpesq3_ml_mimes['+extension+'][mime]');
+        mime_type_tr.find('.wpuxss-eml-singular').attr('name','wpesq3_ml_mimes['+extension+'][singular]');
+        mime_type_tr.find('.wpuxss-eml-plural').attr('name','wpesq3_ml_mimes['+extension+'][plural]');
+        mime_type_tr.find('.wpuxss-eml-filter').attr('name','wpesq3_ml_mimes['+extension+'][filter]');
+        mime_type_tr.find('.wpuxss-eml-upload').attr('name','wpesq3_ml_mimes['+extension+'][upload]');
     });
 
 

@@ -31,7 +31,7 @@ function emlIsFilterBased( attrs ) {
 
 
 
-    _.extend( eml.l10n, wpuxss_eml_enhanced_medialist_l10n );
+    _.extend( eml.l10n, wpesq3_ml_enhanced_medialist_l10n );
 
 
 

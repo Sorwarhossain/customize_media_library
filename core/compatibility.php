@@ -4,15 +4,6 @@ if ( ! defined( 'ABSPATH' ) )
     exit;
 
 
-
-/**
- *  wpuxss_eml_elementor_scripts
- *  @TODO: temporary solution
- *
- *  @since    2.5
- *  @created  28/01/18
- */
-
 add_action( 'elementor/editor/after_enqueue_scripts', 'wpesq3_ml_elementor_scripts' );
 
 if ( ! function_exists( 'wpesq3_ml_elementor_scripts' ) ) {
